@@ -15,8 +15,8 @@
 						date_default_timezone_set("America/Lima");
 						$mes = array("enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre");
 						$dia = array("domingo","lunes","martes","miercoles","jueves","sabado");
-						 "Perú, " . $dia[date("w")] . " " . date("d") . " de " . $mes[date("m")-1] . " de " . date("Y") . "<br>";
-				?></p>
+						echo "Perú, " . $dia[date("w")] . " " . date("d") . " de " . $mes[date("m")-1] . " de " . date("Y") . "<br>";
+						?></p>
 				<span>|</span>
 				<span class="user">Diego Príncipe</span>
 				<img class="photouser" src="img/user.png" alt="Usuario">
