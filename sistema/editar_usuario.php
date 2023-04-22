@@ -99,7 +99,7 @@ include "../conexion.php";
 
 	$iduser =  $_GET["id"];
 
-	$sql = mysqli_query($connection,"select u.idusuario,u.nombre,u.correo,u.usuario, (u.rol) as idrol, (r.rol) as rol from usuario u inner join rol r on r.idrol = u.rol where idusuario = $iduser");
+	$sql = mysqli_query($connection,"select u.idusuario,u.nombre,u.correo,u.usuario, (u.rol) as idrol, (r.rol) as rol from usuario u inner join rol r on r.idrol = u.rol where idusuario = $iduser and estatus = 1");
 	mysqli_close($connection);	
 	$result = mysqli_num_rows($sql);
 
@@ -140,7 +140,7 @@ include "../conexion.php";
 	<section id="container">
 		
 			<div class="form_register">
-				<h1 >Actualizar Usuario</h1>
+				<h1 ><i class="fa-solid fa-pen-to-square"></i> Actualizar Usuario</h1>
 				<hr>
 					<div class="alert">
 							<?php echo isset($alert) ? $alert : ""; ?>
@@ -201,7 +201,7 @@ if($idrol != 1){
 }
 ?>
 
-						<input type="submit" value="Actualizar Usuario" class="btn-save">
+<button type="submit" class="btn-save"><i class="fa-solid fa-pen-to-square"></i> Actualizar Usuario</button>
 
 
 					</form>

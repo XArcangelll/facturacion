@@ -1,6 +1,6 @@
 <nav>
 			<ul>
-				<li><a href="../">Inicio</a></li>
+				<li><a href="../"><i class="fa-solid fa-house" ></i> Inicio</a></li>
 
 				<?php
 				
@@ -8,40 +8,44 @@
 
 				?>
 				<li class="principal">
-					<a href="">Usuarios</a>
+					<a href=""><i class="fa-solid fa-users"></i> Usuarios</a>
 					<ul>
-						<li><a href="registro_usuario.php">Nuevo Usuario</a></li>
-						<li><a href="lista_usuario.php">Lista de Usuarios</a></li>
+						<li><a href="registro_usuario.php"><i class="fa-solid fa-user-plus"></i> Nuevo Usuario</a></li>
+						<li><a href="lista_usuario.php"><i class="fa-solid fa-users"></i> Lista de Usuarios</a></li>
 					</ul>
 				</li>
 
 				<?php } ?>
 				<li class="principal">
-					<a href="#">Clientes</a>
+					<a href="#"><i class="fa-solid fa-user"></i> Clientes</a>
 					<ul>
-						<li><a href="#">Nuevo Cliente</a></li>
-						<li><a href="#">Lista de Clientes</a></li>
+						<li><a href="registro_cliente.php"><i class="fa-solid fa-user-plus"></i> Nuevo Cliente</a></li>
+						<li><a href="lista_cliente.php"><i class="fa-solid fa-users"></i> Lista de Clientes</a></li>
 					</ul>
 				</li>
+				<?php if($_SESSION["rol"] == 1 || $_SESSION["rol"] == 2){ ?>
 				<li class="principal">
-					<a href="#">Proveedores</a>
+					<a href="#"><i class="fa-solid fa-boxes-packing"></i> Proveedores</a>
 					<ul>
-						<li><a href="#">Nuevo Proveedor</a></li>
-						<li><a href="#">Lista de Proveedores</a></li>
+						<li><a href="registro_proveedor.php"><i class="fa-solid fa-boxes-packing"></i> Nuevo Proveedor</a></li>
+						<li><a href="lista_proveedor.php"><i class="fa-solid fa-boxes-packing"></i> Lista de Proveedores</a></li>
 					</ul>
 				</li>
+				<?php } ?>
+				<?php if($_SESSION["rol"] == 1 || $_SESSION["rol"] == 2){ ?>
 				<li class="principal">
-					<a href="#">Productos</a>
+					<a href="#"><i class="fa-solid fa-store"></i> Productos</a>
 					<ul>
-						<li><a href="#">Nuevo Producto</a></li>
-						<li><a href="#">Lista de Productos</a></li>
+						<li><a href="registro_producto.php"><i class="fa-solid fa-store"></i> Nuevo Producto</a></li>
+						<li><a href="lista_producto.php"><i class="fa-solid fa-store"></i> Lista de Productos</a></li>
 					</ul>
 				</li>
+				<?php } ?>
 				<li class="principal">
-					<a href="#">Facturas</a>
+					<a href="#"><i class="fa-solid fa-money-bill"></i> Ventas</a>
 					<ul>
-						<li><a href="#">Nuevo Factura</a></li>
-						<li><a href="#">Facturas</a></li>
+						<li><a href="#"><i class="fa-solid fa-money-bill"></i> Nueva Venta</a></li>
+						<li><a href="#"><i class="fa-solid fa-money-bill"></i> Ventas</a></li>
 					</ul>
 				</li>
 			</ul>

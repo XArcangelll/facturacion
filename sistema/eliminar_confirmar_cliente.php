@@ -11,22 +11,18 @@ if($_SESSION["rol"]!= 1){
 
     if(!empty($_POST)){
 
-
-        if($_POST["idusuario"] == 13){
-            header("location: lista_usuario.php");
-            mysqli_close($connection);
-            exit;
+        if(empty($_POST["idcliente"])){
+            header("location: lista_cliente.php");
         }
-
-        $idusuario = $_POST["idusuario"];
+        $idcliente = $_POST["idcliente"];
 
          //   $query_delete = mysqli_query($connection,"Delete from usuario where idusuario = $idusuario");
 
-         $query_delete = mysqli_query($connection,"UPDATE usuario SET estatus = 0 where idusuario = $idusuario");
+         $query_delete = mysqli_query($connection,"UPDATE cliente SET estatus = 0 where idcliente = $idcliente");
          mysqli_close($connection);
 
             if($query_delete){
-                header("location: lista_usuario.php");
+                header("location: lista_cliente.php");
             }else{
                 echo "Error al eliminar";
             }
@@ -34,15 +30,15 @@ if($_SESSION["rol"]!= 1){
 
     }
 
-    if(empty($_REQUEST["id"]) || $_REQUEST["id"] == 13){
-        header("location: lista_usuario.php");
+    if(empty($_REQUEST["id"]) ){
+        header("location: lista_cliente.php");
         mysqli_close($connection);
     }else{
      
 
-        $idusuario = $_REQUEST["id"];
+        $idcliente = $_REQUEST["id"];
 
-        $query = mysqli_query($connection,"select u.nombre,u.usuario,r.rol from usuario u inner join rol r on u.rol = r.idrol where u.idusuario = $idusuario and estatus = 1");
+        $query = mysqli_query($connection,"select dni,nombre,telefono,direccion from cliente where idcliente = $idcliente and estatus = 1");
         mysqli_close($connection);
         $result = mysqli_num_rows($query);
 
@@ -50,13 +46,14 @@ if($_SESSION["rol"]!= 1){
 
             while($data = mysqli_fetch_array($query)){
 
+                $dni = $data["dni"];
                 $nombre = $data["nombre"];
-                $usuario = $data["usuario"];
-                $rol = $data["rol"];
+                $telefono = $data["telefono"];
+                $direccion = $data["direccion"];
             }
 
         }else{
-            header("location: lista_usuario.php");
+            header("location: lista_cliente.php");
         }
 
     }
@@ -73,7 +70,7 @@ if($_SESSION["rol"]!= 1){
 	<meta charset="UTF-8">
 	
 	<?php include "includes/scripts.php" ?>
-	<title>Eliminar Usuario</title>
+	<title>Eliminar Cliente</title>
 </head>
 <body>
 	
@@ -84,14 +81,15 @@ if($_SESSION["rol"]!= 1){
             <div class="data_delete">
             <i class="fa-solid fa-user-xmark fa-7x icono" style="color: #fb0404;"></i>
                     <h2>¿Está seguro de eliminar el siguiente registro?</h2>
-                 
+                    <p>DNI: <span><?php echo $dni;?></span> </p>
                     <p>Nombre: <span><?php echo $nombre;?></span> </p>
-                    <p>Usuario: <span><?php echo $usuario;?></span> </p>
-                    <p>Tipo Usuario: <span><?php echo $rol;?></span> </p>
+                    <p>Teléfono: <span><?php echo $telefono;?></span> </p>
+                    <p>Dirección: <span><?php echo $direccion;?></span> </p>
+                    
                     <form method="post" action="">
-                    <input type="hidden" name="idusuario" value="<?php echo $idusuario ?>" >
-                         <button type="submit" class="btn_ok" onclick="return confirmacion()"><i class="fa-solid fa-trash"></i> Eliminar</button>
-                        <a href="lista_usuario.php" class="btn_cancel"><i class="fa-solid fa-xmark"></i> Cancelar</a>
+                    <input type="hidden" name="idcliente" value="<?php echo $idcliente ?>" >
+                    <button type="submit" class="btn_ok" onclick="return confirmacion()"><i class="fa-solid fa-trash"></i> Eliminar</button>
+                        <a href="lista_cliente.php" class="btn_cancel"><i class="fa-solid fa-xmark"></i> Cancelar</a>
                     </form>
                     
             </div>

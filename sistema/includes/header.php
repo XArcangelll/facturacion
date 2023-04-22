@@ -19,7 +19,7 @@ if(!isset($_SESSION["active"])){
 						echo fechaC();
 						?></p>
 				<span>|</span>
-				<span class="user"><?php echo $_SESSION["user"] . " - " . $_SESSION["nombreRol"]  ?></span>
+				<span class="user"><?php echo $_SESSION["user"] . " - " . $_SESSION["nombreRol"] . " - " . $_SESSION["email"] ?></span>
 				<img class="photouser" src="img/user.png" alt="Usuario">
 				<a href="salir.php"><img class="close" src="img/salir.png" alt="Salir del sistema" title="Salir"></a>
 			</div>
@@ -27,3 +27,9 @@ if(!isset($_SESSION["active"])){
 		
        <?php include "nav.php" ?>
 	</header>
+
+	<div class="modal">
+				<div class="bodyModal">
+						
+				</div>
+	</div>

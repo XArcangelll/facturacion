@@ -193,7 +193,7 @@ label{
 	margin: 15px auto 5px auto;
 }
 
-input,select{
+input,select,button{
 	display: block;
 	width: 100%;
 	font-size: 18px;
@@ -257,6 +257,13 @@ input,select{
 	border-radius: 5px;
 	padding: 5px 25px;
 	margin: 20px;
+	transition: all 0.2s;
+}
+.btn_new:hover{
+	transition: all 0.2s;
+	scale: 1.1;
+	background: #22252C;
+	color: #fff;
 }
 
 table{
@@ -287,6 +294,9 @@ table td{
 
 .link_delete{
 	color: #f26b6b;
+}
+.link_add{
+	color: #64b13c;
 }
 
 .data_delete {
@@ -394,10 +404,209 @@ table td{
 .form_search .btn_search{
 	background: #1faac8;
 	color: #fff;
-	padding: 0 20px;
+	padding: 0 15px;
 	border: 0;
 	cursor: pointer;
-	margin-left: 10px;
+	margin-left: 15px;
+	transition: all 0.2s;
+}
+
+.btn_search:hover{
+	transition: all 0.2s;
+	scale: 1.1;
+	background: #22252C;
+	color: #fff;
+}
+
+.icono{
+ margin: 20px;
 }
 
 
+.prevPhoto {
+    display: flex;
+    justify-content: space-between;
+    width: 160px;
+    height: 150px;
+    border: 1px solid #CCC;
+    position: relative;
+    cursor: pointer;
+    background: url(../img/up.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    margin: auto;
+}
+.prevPhoto label{
+	cursor: pointer;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
+	margin: 0px;
+}
+.prevPhoto img{
+	width: 100%;
+	height: 100%;
+}
+.upimg, .notBlock{
+	display: none !important;
+}
+.errorArchivo{
+	font-size: 16px;
+	font-family: arial;
+	color: #cc0000;
+	text-align: center;
+	font-weight: bold; 
+	margin-top: 10px;
+}
+.delPhoto{
+	color: #FFF;
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: -o-flex;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+	width: 25px;
+	height: 25px;
+	background: red;
+	position: absolute;
+	right: -10px;
+	top: -10px;
+	z-index: 10;
+}
+
+
+
+/*-Lista de Producto imagenes-*/
+
+.img_producto{
+	width: 60px;
+	height: 60px;
+	margin: auto;
+}
+
+
+.imgProductoDelete{
+	width: 175px;
+}
+
+table tr th{
+	text-align: center;
+}
+
+table tr td{
+	text-align: center;
+	
+}
+
+
+.modal{
+	position: fixed;
+	width: 100%;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.85);
+	display: none;
+}
+
+
+.bodyModal{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	
+}
+
+.bloki{
+	display: block;
+	padding-bottom: 10px;
+	color:#0a4661;
+}
+
+
+.btn_add{
+	margin: 0;
+}
+
+.botones2{
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: center;
+	text-align: center;
+	margin: auto;
+}
+
+.botones2 button{
+	margin: auto;
+	font-size: 16px;
+	background-color: #64b13c;
+	height: 30px;
+	width: 40%;
+}
+
+.botones2 a{
+	text-align: center;
+	justify-content: center;
+	margin: auto;
+	width: 40%;
+	height: 30px;
+	background-color:  #f26b6b;
+}
+
+
+#form_add_product{
+	width: 30%;
+	border-radius: 30px;
+	padding: 0px 5% 2% 5%;
+}
+
+.bloki,.nameProducto{
+	text-transform: uppercase;
+}
+
+#form_add_product  .bloki,.nameProducto,#txtCantidad,#txtPrecio{
+	margin-top: 27px;
+}
+
+.junto{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	margin: 0;
+}
+
+.junto label{
+	width: 35%;
+}
+
+.junto #txtPrecio,#txtCantidad{
+	width: 65%;
+	margin-bottom: 15px;
+	text-align: center;
+}
+
+.alertAddProduct{
+	margin: 20px 0px;
+}
+
+.btn_el{
+	background-color: #f26b6b;
+}
+
+#search_proveedor{
+	background-color: #3d7ba8;
+	color: white;
+	border: none;
+	text-align: center;
+	font-size: 20px;
+	font-weight: bold;
+}

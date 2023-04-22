@@ -2,12 +2,6 @@
 
 session_start();
 
-
-
-if($_SESSION["rol"]!= 1){
-	header("location: ./");
-}
-
 include "../conexion.php";
 
 
@@ -21,7 +15,7 @@ include "../conexion.php";
 	<meta charset="UTF-8">
 	
 	<?php include "includes/scripts.php" ?>
-	<title>Lista de Usuarios</title>
+	<title>Lista de Clientes</title>
 </head>
 <body>
 	
@@ -34,35 +28,34 @@ include "../conexion.php";
         $busqueda = strtolower($_REQUEST["busqueda"]);
 
         if(empty($busqueda)){
-            header("location: lista_usuario.php");
+            header("location: lista_cliente.php");
             mysqli_close($connection);
         }
 
     ?>
 		
-        <h1><i class="fa-solid fa-users"></i> Lista de Usuarios</h1>
-        <a href="registro_usuario.php" class="btn_new"><i class="fa-solid fa-user-plus"></i> Crear Usuario</a>
-        
-        <form action="buscar_usuario.php" method="get" class="form_search">
-            <input type="text" name="busqueda" id="busqueda" placeholder="Buscar" value="<?php echo $busqueda;?>">
+        <h1><i class="fa-solid fa-users"></i> Lista de Clientes</h1>
+        <a href="registro_cliente.php" class="btn_new"><i class="fa-solid fa-user-plus"></i> Crear Cliente</a>
 
+        <form action="buscar_cliente.php" method="get" class="form_search">
+        <input type="text" name="busqueda" id="busqueda" placeholder="Buscar">
             <button type="submit" class="btn_search"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
         </form>
 
         <table>
             <tr>
                 <th>ID</th>
+                <th>DNI</th>
                 <th>Nombre</th>
-                <th>Correo</th>
-                <th>Usuario</th>
-                <th>Rol</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
                 <th>Acciones</th>
             </tr>
 
             <?php
 
                 //paginador
-                $sql_registe = mysqli_query($connection,"select count(*) as total_registro from usuario inner join rol on usuario.rol = rol.idrol where ( idusuario like '%$busqueda%' or nombre like '%$busqueda%' or correo like '%$busqueda%' or usuario like '%$busqueda%' or rol.rol like '%$busqueda%' ) and estatus = 1;");
+                $sql_registe = mysqli_query($connection,"select count(*) as total_registro from cliente where ( idcliente like '%$busqueda%' or dni like '%$busqueda%' or nombre like '%$busqueda%' or telefono like '%$busqueda%' or direccion like '%$busqueda%' ) and estatus = 1;");
                 $result_register = mysqli_fetch_array($sql_registe);
 
                 $total_registro = $result_register['total_registro'];
@@ -83,10 +76,10 @@ include "../conexion.php";
                 
 
                 if($pagina <= 0){
-                    header("location: lista_usuario.php");
+                    header("location: lista_cliente.php");
                 }
             
-                $query = mysqli_query($connection,"select u.idusuario,u.nombre,u.correo,u.usuario,u.rol as idrol,r.rol from usuario u inner join rol r on r.idrol = u.rol where ( u.idusuario like '%$busqueda%' or u.nombre like '%$busqueda%' or u.correo like '%$busqueda%' or u.usuario like '%$busqueda%' or r.rol like '%$busqueda%' ) and u.estatus = 1 order by u.idusuario asc LIMIT $desde,$por_pagina");
+                $query = mysqli_query($connection,"select idcliente,dni,nombre,telefono,direccion from cliente  where ( idcliente like '%$busqueda%' or dni like '%$busqueda%' or nombre like '%$busqueda%' or telefono like '%$busqueda%' or direccion like '%$busqueda%' ) and estatus = 1 order by idcliente asc LIMIT $desde,$por_pagina");
                 mysqli_close($connection);
                 $result_can = mysqli_num_rows($query);
 
@@ -94,11 +87,11 @@ include "../conexion.php";
                                 $resultados = "";
 
                                 if($pagina <= 0){
-                                    header("location: buscar_usuario.php?busqueda=$busqueda");
+                                    header("location: buscar_cliente.php?busqueda=$busqueda");
                                 }
                 
                                 if($pagina > $total_paginas){
-                                    header("location: buscar_usuario.php?pagina=$total_paginas&busqueda=$busqueda");
+                                    header("location: buscar_cliente.php?pagina=$total_paginas&busqueda=$busqueda");
                                 }
                 
 
@@ -107,20 +100,19 @@ include "../conexion.php";
             ?>
 
             <tr>
-                <td><?php echo $result["idusuario"]?></td>
+                <td><?php echo $result["idcliente"]?></td>
+                <td><?php echo $result["dni"]?></td>
                 <td><?php echo $result["nombre"]?></td>
-                <td><?php echo $result["correo"]?></td>
-                <td><?php echo $result["usuario"]?></td>
-                <td><?php echo $result["rol"]?></td>
+                <td><?php echo $result["telefono"]?></td>
+                <td><?php echo $result["direccion"]?></td>
                 <td>
-                    <a class="link_edit" href="editar_usuario.php?id=<?php echo $result["idusuario"]?>"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
+                    <a class="link_edit" href="editar_cliente.php?id=<?php echo $result["idcliente"]?>"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
                     
 
                     <?php
-                        if($result["idrol"] != 1){
+                       if($_SESSION["rol"] == 1){ 
                     ?>
-                    |
-                    <a class="link_delete" href="eliminar_confirmar_usuario.php?id=<?php echo $result["idusuario"]?>"><i class="fa-solid fa-trash"></i> Eliminar</a>
+                    <a class="link_delete" href="eliminar_confirmar_cliente.php?id=<?php echo $result["idcliente"]?>"><i class="fa-solid fa-trash"></i> Eliminar</a>
                
                             <?php
                         }
@@ -132,7 +124,7 @@ include "../conexion.php";
                             }else{
 
                                 if($pagina <= 0){
-                                    header("location: lista_usuario.php");
+                                    header("location: lista_cliente.php");
                                 }
                 
                                 $resultados = "no hay resultados";

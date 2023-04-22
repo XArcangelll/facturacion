@@ -3,9 +3,10 @@
 session_start();
 
 
-if($_SESSION["rol"]!= 1){
+if($_SESSION["rol"] != 1 && $_SESSION["rol"]!= 2){
 	header("location: ./");
 }
+
 
 include "../conexion.php";
 
@@ -20,7 +21,7 @@ include "../conexion.php";
 	<meta charset="UTF-8">
 	
 	<?php include "includes/scripts.php" ?>
-	<title>Lista de Usuarios</title>
+	<title>Lista de Proveedores</title>
 </head>
 <body>
 	
@@ -28,28 +29,29 @@ include "../conexion.php";
 
 	<section id="container">
 		
-        <h1><i class="fa-solid fa-users"></i> Lista de Usuarios</h1>
-        <a href="registro_usuario.php" class="btn_new"><i class="fa-solid fa-user-plus"></i> Crear Usuario</a>
+        <h1><i class="fa-solid fa-boxes-packing"></i> Lista de Proveedores</h1>
+        <a href="registro_proveedor.php" class="btn_new"><i class="fa-solid fa-user-plus"></i> Crear Proveedor</a>
 
-        <form action="buscar_usuario.php" method="get" class="form_search">
-            <input type="text" name="busqueda" id="busqueda" placeholder="Buscar">
+        <form action="buscar_proveedor.php" method="get" class="form_search">
+        <input type="text" name="busqueda" id="busqueda" placeholder="Buscar">
             <button type="submit" class="btn_search"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
         </form>
 
         <table>
             <tr>
                 <th>ID</th>
-                <th>Nombre</th>
-                <th>Correo</th>
-                <th>Usuario</th>
-                <th>Rol</th>
+                <th>Proveedor</th>
+                <th>Contacto</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Fecha</th>
                 <th>Acciones</th>
             </tr>
 
             <?php
 
                 //paginador
-                $sql_registe = mysqli_query($connection,"select count(*) as total_registro from usuario where estatus = 1");
+                $sql_registe = mysqli_query($connection,"select count(*) as total_registro from proveedor where estatus = 1");
                 $result_register = mysqli_fetch_array($sql_registe);
 
                 $total_registro = $result_register['total_registro'];
@@ -68,41 +70,44 @@ include "../conexion.php";
                 $total_paginas = ceil($total_registro / $por_pagina);
 
                 if($pagina <= 0){
-                    header("location: lista_usuario.php");
+                    header("location: lista_proveedor.php");
                 }
 
                 if($pagina > $total_paginas){
-                    header("location: lista_usuario.php?pagina=$total_paginas");
+                    header("location: lista_proveedor.php?pagina=$total_paginas");
                 }
             
-                $query = mysqli_query($connection,"select u.idusuario,u.nombre,u.correo,u.usuario,u.rol as idrol,r.rol from usuario u inner join rol r on r.idrol = u.rol where u.estatus = 1 order by u.idusuario asc LIMIT $desde,$por_pagina");
+                $query = mysqli_query($connection,"select codproveedor,proveedor,contacto,telefono,direccion,date_add from proveedor where estatus = 1 order by codproveedor asc LIMIT $desde,$por_pagina");
                 mysqli_close($connection);	
                 $result_can = mysqli_num_rows($query);
 
 							if($result_can > 0){
 								while($result = mysqli_fetch_array($query)){
+                                    $formato = "Y-m-d H:i:s";
+                                    $fecha = DateTime::createFromFormat($formato,$result["date_add"]);
 						
             ?>
 
             <tr>
-                <td><?php echo $result["idusuario"]?></td>
-                <td><?php echo $result["nombre"]?></td>
-                <td><?php echo $result["correo"]?></td>
-                <td><?php echo $result["usuario"]?></td>
-                <td><?php echo $result["rol"]?></td>
+                <td><?php echo $result["codproveedor"]?></td>
+                <td><?php echo $result["proveedor"]?></td>
+                <td><?php echo $result["contacto"]?></td>
+                <td><?php echo $result["telefono"]?></td>
+                <td><?php echo $result["direccion"]?></td>
+                <td><?php echo $fecha->format("d-m-Y")?></td>
                 <td>
-                    <a class="link_edit" href="editar_usuario.php?id=<?php echo $result["idusuario"]?>"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
-                    
+                    <a class="link_edit" href="editar_proveedor.php?id=<?php echo $result["codproveedor"]?>"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
 
                     <?php
-                        if($result["idrol"] != 1){
+                    
+                    if($_SESSION["rol"] == 1){               
+                    
+
                     ?>
-                    |
-                    <a class="link_delete" href="eliminar_confirmar_usuario.php?id=<?php echo $result["idusuario"]?>"><i class="fa-solid fa-trash"></i> Eliminar</a>
+                    <a class="link_delete" href="eliminar_confirmar_proveedor.php?id=<?php echo $result["codproveedor"]?>"><i class="fa-solid fa-trash"></i> Eliminar</a>
                
-                            <?php
-                        }
-                            ?>
+               <?php } ?>
+               
                 </td>
             </tr>
             <?php

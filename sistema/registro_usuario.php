@@ -8,7 +8,13 @@ if($_SESSION["rol"]!= 1){
 	header("location: ./");
 }
 
+
+
 include "../conexion.php";
+
+
+
+					
 
 	if(!empty($_POST)){
 		$alert = "";
@@ -35,8 +41,16 @@ include "../conexion.php";
 				if($result > 0){
 					$alert = "<p class='msg_error'> El correo y/o el usuario ya existe </p>";
 				}else{
+					$roles = [];
+					$query2 = mysqli_query($connection,"select idrol from rol");
+					while( $aea =	$result2 = mysqli_fetch_array($query2)){
+					array_push($roles,$aea["idrol"]);
+					}
 
-					if($rol != 1){
+					if(in_array($rol,$roles) == false){
+						$alert = "<p class='msg_save'> El id no existe no te pases</p>";
+					}else{
+					if( $rol != 1 ){
 						$query_insert = mysqli_query($connection,"INSERT INTO usuario(nombre,correo,usuario,clave,rol) values('$nombre','$email','$user','$clave','$rol') ");
 						mysqli_close($connection);	
 						if($query_insert){
@@ -49,6 +63,7 @@ include "../conexion.php";
 						$alert = "<p class='msg_error'> No te pases de vivo</p>";
 					}
 
+				}
 				
 				
 				}
@@ -76,7 +91,7 @@ include "../conexion.php";
 	<section id="container">
 		
 			<div class="form_register">
-				<h1>Registro Usuario</h1>
+				<h1><i class="fa-solid fa-users"></i> Registro Usuario</h1>
 				<hr>
 					<div class="alert">
 							<?php echo isset($alert) ? $alert : ""; ?>
@@ -119,8 +134,8 @@ include "../conexion.php";
 							?>	
 						</select>
 
-						<input type="submit" value="Crear Usuario" class="btn-save">
-
+					
+						<button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Crear Usuario</button>
 
 					</form>
 
