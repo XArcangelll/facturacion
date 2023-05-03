@@ -44,7 +44,7 @@
 				<li class="principal">
 					<a href="#"><i class="fa-solid fa-money-bill"></i> Ventas</a>
 					<ul>
-						<li><a href="#"><i class="fa-solid fa-money-bill"></i> Nueva Venta</a></li>
+						<li><a href="nueva_venta.php"><i class="fa-solid fa-money-bill"></i> Nueva Venta</a></li>
 						<li><a href="#"><i class="fa-solid fa-money-bill"></i> Ventas</a></li>
 					</ul>
 				</li>

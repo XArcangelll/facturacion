@@ -94,6 +94,7 @@ include "../conexion.php";
 
                     ?>
                     <a class="link_delete" href="eliminar_confirmar_cliente.php?id=<?php echo $result["idcliente"]?>"><i class="fa-solid fa-trash"></i> Eliminar</a>
+                   
                
                <?php } ?>
                
