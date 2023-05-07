@@ -15,7 +15,7 @@ include "../conexion.php";
 
 	if(!empty($_POST)){
 		$alert = "";
-		if(empty($_POST["proveedor"]) || empty($_POST["descripcion"]) || empty($_POST["precio"]) 
+		if(empty($_POST["proveedor"]) || empty($_POST["descripcion"]) || empty($_POST["precio"]) || empty($_POST["medida"])
 		 || empty($_POST["id"])  || empty($_POST["foto_actual"])  || empty($_POST["foto_remove"]))
 		{
 
@@ -27,6 +27,11 @@ include "../conexion.php";
                 $proveedor = $_POST["proveedor"];
 				$descripcion = $_POST["descripcion"];
 				$precio = $_POST["precio"];
+				$medida = $_POST["medida"];
+
+				if($medida != 1 && $medida != 2){
+					$medida = 1;
+				}
 				$imgProducto = $_POST["foto_actual"];
 				$imgRemove = $_POST["foto_remove"];
                
@@ -50,7 +55,7 @@ include "../conexion.php";
 				}
 
 
-						$query_update = mysqli_query($connection,"Update producto set descripcion='$descripcion', proveedor = $proveedor, precio = $precio, foto = '$imgProducto' where codproducto = $codproducto");
+						$query_update = mysqli_query($connection,"Update producto set descripcion='$descripcion', proveedor = $proveedor, precio = $precio, codmedida = $medida, foto = '$imgProducto' where codproducto = $codproducto");
 						if($query_update){
 
 							if(($nombre_foto != "" && ($_POST["foto_actual"] != "img_producto.png" )) || ($_POST["foto_actual"] != $_POST["foto_remove"])){
@@ -86,7 +91,7 @@ include "../conexion.php";
 			header("location: lista_producto.php");
 		}
 
-		$query_producto = mysqli_query($connection,"SELECT p.codproducto,p.descripcion,p.precio,p.foto,pr.codproveedor,pr.proveedor from producto p inner join proveedor pr on p.proveedor = pr.codproveedor where p.codproducto = $idproducto and p.estatus = 1");
+		$query_producto = mysqli_query($connection,"SELECT p.codproducto,p.descripcion,p.precio,m.codmedida,m.nombre,p.foto,pr.codproveedor,pr.proveedor from producto p inner join proveedor pr on p.proveedor = pr.codproveedor inner join medida m on p.codmedida = m.codmedida where p.codproducto = $idproducto and p.estatus = 1");
 		$result_producto = mysqli_num_rows($query_producto);
 
 		$foto = "";
@@ -104,6 +109,8 @@ include "../conexion.php";
 			$codproducto = $data_producto["codproducto"];
 			$descripcion = $data_producto["descripcion"];
 			$precio = $data_producto["precio"];
+			$codmedida = $data_producto["codmedida"];
+			$nommedida = $data_producto["nombre"];
 			$fotito = $data_producto["foto"];
 			$id_proveedor = $data_producto["codproveedor"];
 			$proveedor = $data_producto["proveedor"];
@@ -146,7 +153,7 @@ include "../conexion.php";
 							<?php
 								$query_proveedor = mysqli_query($connection,"Select codproveedor,proveedor from proveedor where estatus = 1 order by proveedor asc");
 									$result_proveedor = mysqli_num_rows($query_proveedor);
-									mysqli_close($connection);
+								
 							?>
 
 						<select name="proveedor" id="proveedor">
@@ -172,6 +179,30 @@ include "../conexion.php";
 						<label for="precio">Precio</label>
 						<input type="number" name="precio" value="<?php echo $precio?>" step="0.01" id="precio" placeholder="Precio del Producto">
 					
+						<label for="medida">Medida</label>
+
+						<?php
+
+							$query_medida = mysqli_query($connection,"Select codmedida,nombre from medida");
+							mysqli_close($connection);
+								$result_medida = mysqli_num_rows($query_medida);
+							
+						?>
+
+						<select name="medida" id="medida">
+
+						<?php   
+
+						if($result_medida > 0){
+							while($medida = mysqli_fetch_array($query_medida)){
+								?>
+										<option <?php echo ($medida["codmedida"] == $codmedida) ? "selected" : "" ; ?> value="<?php echo $medida["codmedida"] ?>"><?php echo $medida["nombre"] ?></option>
+								<?php
+							}
+						}
+
+						?>
+						</select>
 
 						<div class="photo">
 							<label for="foto">Foto</label>

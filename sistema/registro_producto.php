@@ -16,7 +16,7 @@ include "../conexion.php";
 	if(!empty($_POST)){
 		$alert = "";
 		if(empty($_POST["proveedor"]) || empty($_POST["descripcion"]) || empty($_POST["precio"]) 
-		 || empty($_POST["cantidad"]) )
+		 || empty($_POST["cantidad"])  || empty($_POST["medida"]) )
 		{
 
 			$alert = "<p class='msg_error'> Los campos Proveedor,Descripcipon,Precio y Cantidad son Obligatorios </p>";
@@ -28,6 +28,12 @@ include "../conexion.php";
 				$descripcion = $_POST["descripcion"];
 				$precio = $_POST["precio"];
 				$cantidad = $_POST["cantidad"];
+				$medida = $_POST["medida"];
+
+				if($medida != 1 && $medida != 2){
+					$medida = 1;
+				}
+
                 $idusuario = $_SESSION["idUser"];
 
 				$foto = $_FILES["foto"];
@@ -45,7 +51,7 @@ include "../conexion.php";
 				}
 
 
-						$query_insert = mysqli_query($connection,"INSERT INTO producto(proveedor,descripcion,precio,existencia,usuario_id,foto) values($proveedor,'$descripcion','$precio','$cantidad',$idusuario,'$imgProducto') ");
+						$query_insert = mysqli_query($connection,"INSERT INTO producto(proveedor,descripcion,precio,existencia,codmedida,usuario_id,foto) values($proveedor,'$descripcion','$precio','$cantidad',$medida, $idusuario,'$imgProducto') ");
 						if($query_insert){
 									if($nombre_foto != ""){
 										move_uploaded_file($url_temp,$src);
@@ -96,7 +102,7 @@ include "../conexion.php";
 								$query_proveedor = mysqli_query($connection,"Select codproveedor,proveedor from proveedor where estatus = 1 order by proveedor asc");
 
 									$result_proveedor = mysqli_num_rows($query_proveedor);
-									mysqli_close($connection);
+								
 							?>
 
 						<select name="proveedor" id="proveedor">
@@ -121,6 +127,31 @@ include "../conexion.php";
 						<input type="number" name="precio" step="0.01" id="precio" placeholder="Precio del Producto">
 						<label for="cantidad">Cantidad del producto</label>
 						<input type="number" name="cantidad" id="cantidad" placeholder="Cantidad del Producto">
+
+						<label for="medida">Medida</label>
+
+						<?php
+
+							$query_medida = mysqli_query($connection,"Select codmedida,nombre from medida");
+
+								$result_medida = mysqli_num_rows($query_medida);
+								mysqli_close($connection);
+						?>
+
+						<select name="medida" id="medida">
+
+						<?php   
+
+						if($result_medida > 0){
+							while($medida = mysqli_fetch_array($query_medida)){
+								?>
+										<option value="<?php echo $medida["codmedida"]?>"><?php echo $medida["nombre"]?></option>
+								<?php
+							}
+						}
+
+						?>
+						</select>
 
 						<div class="photo">
 							<label for="foto">Foto</label>

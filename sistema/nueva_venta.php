@@ -20,10 +20,20 @@ include "../conexion.php";
 <body>
 <?php include "includes/header.php" ?>
 
+
+<div class="modall">
+				<div class="bodyModall">
+						<?php include "consulta_producto.php"?>
+				</div>
+	</div>
+
+
 <section id="container">
     <div class="title_page">
             <h1><i class="fas fa-cube"></i> Nueva Venta</h1>
     </div>
+
+   
 
     <div class="datos_cliente">
         <div class="action_cliente">
@@ -63,6 +73,13 @@ include "../conexion.php";
                     <p><?php echo $_SESSION["nombre"] ?></p>
             </div>
             <div class="wd50">
+            <label id="estadofactura" ></label>
+                <select name="estatus" id="estatus" class="estatusdefinitivo" style="display: none;">
+                    <option value="1" selected>Pagado</option>
+                    <option value="2">Pendiente</option>
+                 </select>
+            </div>
+            <div class="wd50">
                     <label >Acciones</label>
                     <div id="acciones_venta">
                             <a href="#" class="btn_okk textcenter" style="display: none;" id="btn_anular_venta"><i class="fas fa-ban"></i> Anular</a>
@@ -71,7 +88,10 @@ include "../conexion.php";
             </div>
         </div>
     </div>
-
+<div class="datos_venta">
+<button  id="modalProducto">Buscar Producto</button>
+</div>
+ 
 
     <table class="tbl_venta">
             <thead>
@@ -91,6 +111,7 @@ include "../conexion.php";
                     <td><input type="text" name="txt_cant_producto" id="txt_cant_producto" value="0" min="1" disabled></td>
                     <td id="txt_precio" class="textright">0.00</td>
                     <td id="txt_precio_total" class="textright">0.00</td>
+                    <input type="hidden" id="txt_codmedida">
                     <td> <a href="#" id="add_product_venta" class="link_add"><i class="fas fa-plus"></i> Agregar</a></td>
                 </tr>
                 <tr>

@@ -1,4 +1,5 @@
 
+
 function confirmacion(){
     var respuesta = confirm("¿Desea realmente borrar el registro?");
     if(respuesta == true){
@@ -10,8 +11,10 @@ function confirmacion(){
 }
 
 
-$(document).ready(function(){
 
+
+
+$(document).ready(function(){
     //--------------------- SELECCIONAR FOTO PRODUCTO ---------------------
     $("#foto").on("change",function(){
     	var uploadFoto = document.getElementById("foto").value;
@@ -69,6 +72,9 @@ $(document).ready(function(){
 
     //modal form add product
 
+    
+
+  
     $(".add_product").click(function(e){
         e.preventDefault();
 
@@ -281,7 +287,7 @@ $(document).ready(function(){
         e.preventDefault();
         var producto = $(this).val();
         var action = "infoProducto";
-
+     
         if(producto != ""){
             $.ajax({
                 url: "ajax.php",
@@ -299,6 +305,7 @@ $(document).ready(function(){
                         $("#txt_cant_producto").val("1");
                         $("#txt_precio").html(info.precio);
                         $("#txt_precio_total").html(info.precio);
+                        $("#txt_codmedida").val(info.codmedida);
                         if(info.existencia == 0){
                             $("#txt_cant_producto").val("0");
                             $("#add_product_venta").slideUp();
@@ -343,7 +350,19 @@ $(document).ready(function(){
     //validar cantidad del producto antes de agregar
     $("#txt_cant_producto").keyup(function(e){
             e.preventDefault();
-            var precio_total = $(this).val() * $("#txt_precio").html();
+      
+        var precio_total;
+
+            if($("#txt_codmedida").val() == 2){
+                precio_total = ($(this).val() * $("#txt_precio").html())/1000;
+              
+            }else{
+                precio_total = $(this).val() * $("#txt_precio").html();
+            }
+
+        
+
+           
             var existencia = parseInt($("#txt_existencia").html());
             $("#txt_precio_total").html(precio_total.toFixed(2));
 
@@ -447,20 +466,23 @@ $(document).ready(function(){
 
             var action = "procesarVenta";
             var codcliente = $('#idcliente').val();
+           var estatus = $("#estatus").val();
 
 
             $.ajax({
                 url: "ajax.php",
                 type: "POST",
                 async: true,
-                data: {action:action,codcliente:codcliente},
+                data: {action:action,codcliente:codcliente,estatus:estatus},
                 success: function(response){
                  
                     
                    if(response != "error"){
 
                         var info = JSON.parse(response);
-                       // console.log(info);
+                        console.log(info);
+
+                        generarPDF(info.codcliente,info.nofactura);
                         location.reload();
                     }else{
                         console.log("no data");
@@ -475,8 +497,207 @@ $(document).ready(function(){
 
     });
 
+    //anular factura
+    $(".anular_factura").click(function(e){
+        e.preventDefault();
+
+        var nofactura = $(this).attr("fac");
+        var action = "infoFactura";
+
+        $.ajax({
+            url: "ajax.php",
+            type: "POST",
+            async: true,
+            data:{action: action, nofactura:nofactura }
+        ,
+        success: function(response){
+           
+            if(response != "error"){
+                var info = JSON.parse(response);
+              console.log(info);
+
+                $(".bodyModal").html('<form action="" method="post" name="form_anular_factura" id="form_anular_factura" onsubmit="event.preventDefault(); anularFactura();">'+
+                '<h1><i class="fas fa-cubes bloki" style="font-size:45pt;"></i></h1>'+
+                '<h2>¿Está seguro de eliminar la siguiente factura?</h2>'+
+                '<p><strong>No.: '+info.nofactura+'</strong></p>'+
+                '<p><strong>Monto: S/.'+info.totalfactura+'</strong></p>'+
+                '<p><strong>Fecha: '+info.fecha+'</strong></p>'+
+                '<input type="hidden" name="action" value="anularFactura">'+
+                '<input type="hidden" name="no_factura" id="no_factura" value="'+info.nofactura+'" required>'+
+                '<div class="alert alertAddProduct" ></div>'+
+                '<button type="submit" class="btn_ok btn_el" "><i class="fa-solid fa-trash"></i> Anular</button>'+
+                '<a href="#" class="btn_cancel" onclick="closeModal();"><i class="fa-solid fa-xmark"></i> Cancelar</a>'+
+   '</form>')
+ 
+            }
+
+        },
+        error: function(error){
+            console.log(error);
+        }
+    });
+
+        setTimeout(() => {
+            $(".modal").fadeIn();
+        }, 350);
+       
+
+    });
+
+
+     //actualizar factura
+     $(".actualizar_factura").click(function(e){
+        e.preventDefault();
+
+        var nofactura = $(this).attr("fac");
+        var action = "infoFactura";
+
+        $.ajax({
+            url: "ajax.php",
+            type: "POST",
+            async: true,
+            data:{action: action, nofactura:nofactura }
+        ,
+        success: function(response){
+           
+            if(response != "error"){
+                var info = JSON.parse(response);
+              console.log(info);
+
+                $(".bodyModal").html('<form action="" method="post" name="form_actualizar_factura" id="form_actualizar_factura" onsubmit="event.preventDefault(); actualizarFactura();">'+
+                '<h1><i class="fas fa-cubes bloki" style="font-size:45pt;"></i></h1>'+
+                '<h2>Actualización de estado de factura</h2>'+
+                '<div class="estatuscontent">'+
+                '<select name="estatus" id="estatus"  required>'+
+                '<option value="1" selected>Pagado</option>'+
+                '<option value="2">Pendiente</option>'+
+                '</select>'+
+                '</div>'+
+                '<p><strong>No.: '+info.nofactura+'</strong></p>'+
+                '<p><strong>Monto: S/.'+info.totalfactura+'</strong></p>'+
+                '<p><strong>Fecha: '+info.fecha+'</strong></p>'+
+                '<input type="hidden" name="action" value="actualizarFactura">'+
+                '<input type="hidden" name="no_factura" id="no_factura" value="'+info.nofactura+'" required>'+
+                '<div class="alert alertAddProduct" ></div>'+
+                '<button type="submit" class="btn_ok btn_el" "><i class="fa-solid fa-pen-to-square"></i> Actualizar</button>'+
+                '<a href="#" class="btn_cancel" onclick="closeModal();"><i class="fa-solid fa-xmark"></i> Cancelar</a>'+
+   '</form>')
+ 
+            }
+
+        },
+        error: function(error){
+            console.log(error);
+        }
+    });
+
+        setTimeout(() => {
+            $(".modal").fadeIn();
+        }, 350);
+       
+
+    });
+
+
+    //ver Factura
+    $('.view_factura').click(function(e){
+        e.preventDefault();
+        var codCliente = $(this).attr('cl');
+        var noFactura = $(this).attr('f');
+        generarPDF(codCliente,noFactura);
+    });
+
+  
 
 }); //end ready
+
+
+
+
+
+function anularFactura(){
+    var noFactura = $("#no_factura").val();
+    var action = "anularFactura";
+
+    $.ajax({
+            url: "ajax.php",
+            type: "POST",
+            async: true,
+            data: {action:action,noFactura:noFactura},
+            success: function(response){
+            
+                if(response == "error"){
+                    $('.alertAddProduct').html('<p style="color:red;"> Error al anular la factura. </p>');                
+                }else{
+                    $('#row_'+noFactura+' .estado').html('<span class="anulada">Anulada</span>');
+                    $("#form_anular_factura .btn_ok").remove();
+                    $('#row_'+noFactura+' .div_factura').html('<button type="button" class="btn_anular inactive"><i class="fas fa-ban"></i></button>');
+                    $('#row_'+noFactura+' .div_facturaa').html('<button type="button" class="btn_actualizar_factura inactivee"><i class="fa-solid fa-clipboard"></i></button>');
+                    $('.alertAddProduct').html('<p>Factura Anulada</p>');
+                    $('.btn_cancel').html("Cerrar"); 
+                }
+
+            },
+            error: function(response){
+
+            }
+    });
+
+}
+
+function actualizarFactura(){
+    var noFactura = $("#no_factura").val();
+    var action = "actualizarFactura";
+    var estado = $("#estatus").val();
+
+    if(estado == 1 || estado == 2){
+
+        var clase = estado == 1 ? "pagada" : "pendiente";
+        var nestado = estado == 1 ? "Pagada" : "Pendiente";
+
+        $.ajax({
+            url: "ajax.php",
+            type: "POST",
+            async: true,
+            data: {action:action,noFactura:noFactura,estado:estado},
+            success: function(response){
+                console.log(response);
+                if(response == "error"){
+                    $('.alertAddProduct').html('<p style="color:red;"> Error al anular la factura. </p>');                
+                }else{
+                    $('#row_'+noFactura+' .estado').html('<span class="'+clase+'">'+nestado+'</span>');
+                    $("#form_actualizar_factura .btn_ok").remove();
+                    $('.alertAddProduct').html('<p>Factura Actualizada</p>');
+                    $('.btn_cancel').html("Cerrar"); 
+                }
+
+            },
+            error: function(response){
+
+            }
+    });
+
+       
+        
+    }
+
+
+
+    
+
+}
+
+function generarPDF(cliente,factura){
+    var ancho = 1000;
+    var alto = 800;
+    //calcular posicion x,y para centrar la ventana
+    var x = parseInt((window.screen.width/2) - (ancho/2));
+    var y = parseInt((window.screen.height/2) - (alto/2));
+    
+    $url = 'factura/generaFactura.php?cl='+cliente+'&f='+factura;
+    window.open($url,"Factura","left="+x+",top="+y+",height="+alto+",width="+ancho+",scrollbar=si,location=no,resizable=si,menubar=no");
+
+}
 
 
 function del_producto_detalle(correlativo){
@@ -527,9 +748,13 @@ function viewProcesar(){
     if($("#detalle_venta tr").length > 0){
         $("#btn_facturar_venta").show();
         $("#btn_anular_venta").show();
+        $("#estatus").show();
+        $("#estadofactura").html("Estado Factura");
     }else{
         $("#btn_facturar_venta").hide();
         $("#btn_anular_venta").hide();
+        $("#estatus").hide();
+        $("#estadofactura").html("");
     }
 }
 
@@ -642,6 +867,8 @@ function delProduct(){
     }
 });
 }
+
+
 
 
 
