@@ -1013,3 +1013,8 @@ a{
 	width: 100% !important;
 }
 
+#containerr h1{
+	font-size: 35px;
+	margin-bottom: 20px;
+	margin-top: 0px;
+}

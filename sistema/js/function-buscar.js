@@ -71,6 +71,7 @@ function boton_agregar(){
                             $("#txt_cant_producto").val("1");
                             $("#txt_precio").html(info.precio);
                             $("#txt_precio_total").html(info.precio);
+                            $("#txt_codmedida").val(info.codmedida);
                             if(info.existencia == 0){
                                 $("#txt_cant_producto").val("0");
                                 $("#add_product_venta").slideUp();
