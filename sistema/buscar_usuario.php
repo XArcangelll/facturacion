@@ -62,7 +62,7 @@ include "../conexion.php";
             <?php
 
                 //paginador
-                $sql_registe = mysqli_query($connection,"select count(*) as total_registro from usuario inner join rol on usuario.rol = rol.idrol where ( idusuario like '%$busqueda%' or nombre like '%$busqueda%' or correo like '%$busqueda%' or usuario like '%$busqueda%' or rol.rol like '%$busqueda%' ) and estatus = 1;");
+                $sql_registe = mysqli_query($connection,"select count(*) as total_registro from usuario inner join rol on usuario.rol = rol.idrol where ( idusuario like '%$busqueda%' or nombre like '%$busqueda%' or correo like '%$busqueda%' or usuario like '%$busqueda%' or rol.rol like '%$busqueda%' ) and estatus = 1 and usuario.rol != 1;");
                 $result_register = mysqli_fetch_array($sql_registe);
 
                 $total_registro = $result_register['total_registro'];
@@ -86,7 +86,7 @@ include "../conexion.php";
                     header("location: lista_usuario.php");
                 }
             
-                $query = mysqli_query($connection,"select u.idusuario,u.nombre,u.correo,u.usuario,u.rol as idrol,r.rol from usuario u inner join rol r on r.idrol = u.rol where ( u.idusuario like '%$busqueda%' or u.nombre like '%$busqueda%' or u.correo like '%$busqueda%' or u.usuario like '%$busqueda%' or r.rol like '%$busqueda%' ) and u.estatus = 1 order by u.idusuario asc LIMIT $desde,$por_pagina");
+                $query = mysqli_query($connection,"select u.idusuario,u.nombre,u.correo,u.usuario,u.rol as idrol,r.rol from usuario u inner join rol r on r.idrol = u.rol where ( u.idusuario like '%$busqueda%' or u.nombre like '%$busqueda%' or u.correo like '%$busqueda%' or u.usuario like '%$busqueda%' or r.rol like '%$busqueda%' ) and u.estatus = 1 and u.rol != 1 order by u.idusuario asc LIMIT $desde,$por_pagina");
                 mysqli_close($connection);
                 $result_can = mysqli_num_rows($query);
 

@@ -64,7 +64,7 @@ else{
             $user = mysqli_real_escape_string($connection, $_POST["usuario"]);
             $pass = md5(mysqli_real_escape_string($connection, $_POST["clave"]));
 
-            $query = mysqli_query($connection, "SELECT u.idusuario,u.nombre,u.correo,u.usuario,u.rol as idrol , r.rol as nombrerol FROM usuario u inner join rol r on u.rol = r.idrol WHERE usuario = '$user' and clave = '$pass' ");
+            $query = mysqli_query($connection, "SELECT u.idusuario,u.nombre,u.correo,u.usuario,u.rol as idrol , r.rol as nombrerol FROM usuario u inner join rol r on u.rol = r.idrol WHERE usuario = '$user' and clave = '$pass' and estatus = 1");
             mysqli_close($connection);
             $result = mysqli_num_rows($query);
 

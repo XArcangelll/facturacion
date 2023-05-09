@@ -23,7 +23,7 @@
 		}
 
 
-		$query = mysqli_query($connection,"SELECT f.nofactura, DATE_FORMAT(f.fecha, '%d/%m/%Y') as fecha, DATE_FORMAT(f.fecha,'%H:%i:%s') as  hora, f.codcliente, f.estatus,
+		$query = mysqli_query($connection,"SELECT f.totalfactura, f.nofactura, DATE_FORMAT(f.fecha, '%d/%m/%Y') as fecha, DATE_FORMAT(f.fecha,'%H:%i:%s') as  hora, f.codcliente, f.estatus,
 												 v.nombre as vendedor,
 												 cl.dni, cl.nombre, cl.telefono,cl.direccion
 											FROM factura f
@@ -305,7 +305,7 @@ p, label, span, table{
 				</tr>
 				<tr>
 					<td colspan="3" class="textright"><span>TOTAL S/.</span></td>
-					<td class="textright"><span><?php echo $total; ?></span></td>
+					<td class="textright"><span><?php echo  $factura['totalfactura']; ?></span></td>
 				</tr>
 		</tfoot>
 	</table>

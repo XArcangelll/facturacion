@@ -4,6 +4,47 @@ session_start();
 ob_start();
 include "../conexion.php";
 
+$busqueda = '';
+$fecha_de = '';
+$fecha_a = '';
+
+if(isset($_REQUEST["busqueda"]) && $_REQUEST["busqueda"] == ""){
+    header("location: ventas.php");
+}
+
+if(isset($_REQUEST["fecha_de"]) || isset($_REQUEST["fecha_a"])){
+
+    if($_REQUEST["fecha_de"] == "" || $_REQUEST["fecha_a"] == ""){
+        header("location: ventas.php");
+    }
+
+}
+
+if(!empty($_REQUEST["busqueda"])){
+    $busqueda = strtolower($_REQUEST["busqueda"]);
+    $where = "f.nofactura = '$busqueda' or cl.nombre like '%$busqueda%' ";
+    $buscar = "busqueda=$busqueda";
+}
+
+if(!empty($_REQUEST["fecha_de"]) && !empty($_REQUEST["fecha_a"])){
+    $fecha_de = $_REQUEST["fecha_de"];
+    $fecha_a = $_REQUEST["fecha_a"];
+
+    $buscar = '';
+
+    if($fecha_de > $fecha_a){
+        header("location: ventas.php");
+    }else if($fecha_de == $fecha_a){
+        $where = "f.fecha LIKE '$fecha_de%'";
+        $buscar = "fecha_de=$fecha_de&fecha_a=$fecha_a";       
+    }else{
+        $f_de = $fecha_de.' 00:00:00';
+        $f_a = $fecha_a.' 23:59:59';
+        $where = "f.fecha between '$f_de' and '$f_a'";
+        $buscar = "fecha_de=$fecha_de&fecha_a=$fecha_a";
+    }
+}
+
 
 
 ?>
@@ -27,7 +68,7 @@ include "../conexion.php";
         <a href="nueva_venta.php" class="btn_new"><i class="fa-solid fa-plus"></i> Nueva Venta</a>
 
         <form action="buscar_venta.php" method="get" class="form_search arreglar_search">
-        <input type="text" name="busqueda" id="busqueda" placeholder="No. Factura o Nombre de Cliente">
+        <input type="text" name="busqueda" id="busqueda" placeholder="No. Factura o Nombre de Cliente" value="<?php echo $busqueda ?>">
             <button type="submit" class="btn_search"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
         </form>
 
@@ -35,9 +76,9 @@ include "../conexion.php";
             <h5>Buscar por Fecha</h5>
             <form action="buscar_venta.php" method="get" class="form_search_date">
                     <label>De: </label>
-                    <input type="date" name="fecha_de" id="fecha_de" required>
+                    <input type="date" name="fecha_de" id="fecha_de" value="<?php echo $fecha_de?>" required>
                     <label>A: </label>
-                    <input type="date" name="fecha_a" id="fecha_a" required>
+                    <input type="date" name="fecha_a" id="fecha_a" value="<?php echo $fecha_a?>" required>
                     <button type="submit" class="btn_view" ><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
         </div>
@@ -54,9 +95,9 @@ include "../conexion.php";
             </tr>
 
             <?php
-     $resultados = "";
+ $resultados = "";
                 //paginador
-                $sql_registe = mysqli_query($connection,"select count(*) as total_registro from factura where estatus != 10");
+                $sql_registe = mysqli_query($connection,"select count(*) as total_registro from factura f inner join cliente cl on f.codcliente = cl.idcliente where $where and f.estatus != 10");
                 $result_register = mysqli_fetch_array($sql_registe);
 
                 $total_registro = $result_register['total_registro'];
@@ -74,15 +115,15 @@ include "../conexion.php";
                 $desde = ($pagina-1) * $por_pagina;
                 $total_paginas = ceil($total_registro / $por_pagina);
 
-                if($pagina <= 0){
+              /*  if($pagina <= 0){
                     header("location: ventas.php");
                 }
 
                 if($pagina > $total_paginas){
                     header("location: ventas.php?pagina=$total_paginas");
-                }
+                }*/
             
-                $query = mysqli_query($connection,"select f.nofactura,f.fecha,f.totalfactura,f.codcliente,f.estatus,u.nombre as vendedor, cl.nombre as cliente from factura f inner join usuario u on f.usuario = u.idusuario inner join cliente cl on f.codcliente = cl.idcliente where f.estatus !=10 order by f.fecha desc LIMIT $desde,$por_pagina");
+                $query = mysqli_query($connection,"select f.nofactura,f.fecha,f.totalfactura,f.codcliente,f.estatus,u.nombre as vendedor, cl.nombre as cliente from factura f inner join usuario u on f.usuario = u.idusuario inner join cliente cl on f.codcliente = cl.idcliente where $where and f.estatus !=10 order by f.fecha desc LIMIT $desde,$por_pagina");
                 mysqli_close($connection);	
                 $result_can = mysqli_num_rows($query);
 
@@ -144,7 +185,7 @@ include "../conexion.php";
             </tr>
             <?php
                                 }}else{
-                                    $resultados = "no hay resultados";
+                                   $resultados = "no hay resultados";
                                     ?>
                                 
                                     <tr><td><?php echo $resultados?></td></tr>
@@ -158,18 +199,16 @@ include "../conexion.php";
         <div class="paginador">
                                 <ul>
                                     <?php
-
-if($result_can > 0){
-                                    
+                                    if($result_can > 0){
                                         if($pagina != 1){
                                     ?>
-                                    <li><a href="?pagina=<?php echo 1;?>"><i class="fa-solid fa-backward-step"></i></a></li>
-                                    <li><a href="?pagina=<?php echo ($pagina == 1) ? 1 : $pagina-1?>"><i class="fa-solid fa-caret-left"></i></a></li>
+                                    <li><a href="?pagina=<?php echo 1;?>&<?php echo $buscar?>"><i class="fa-solid fa-backward-step"></i></a></li>
+                                    <li><a href="?pagina=<?php echo ($pagina == 1) ? 1 : $pagina-1?>&<?php echo $buscar?>"><i class="fa-solid fa-caret-left"></i></a></li>
 
                                 <?php 
                                         }
 
-                                        if($total_paginas > 1){
+                                    if($total_paginas > 1){
 
                                 if($total_paginas <= 5  ){
                                     for($i = 1; $i<= $total_paginas;$i++){
@@ -178,7 +217,7 @@ if($result_can > 0){
                                             echo '  <li class="pageSelected">'.$i.'</li>';
                                         }else{
 
-                                    echo '  <li><a href="?pagina=' .$i.'">'.$i.'</a></li>';
+                                    echo '  <li><a href="?pagina='.$i.'&'.$buscar.'">'.$i.'</a></li>';
                                         }
                                     }
                                 }else{
@@ -193,7 +232,7 @@ if($result_can > 0){
                                             echo '  <li class="pageSelected">'.$i.'</li>';
                                         }else{
 
-                                    echo '  <li><a href="?pagina=' .$i.'">'.$i.'</a></li>';
+                                    echo '  <li><a href="?pagina='.$i.'&'.$buscar.'">'.$i.'</a></li>';
                                         }
                                     
                                     }else if($i <= $tot){
@@ -202,7 +241,7 @@ if($result_can > 0){
                                             echo '  <li class="pageSelected">'.$i.'</li>';
                                         }else{
 
-                                    echo '  <li><a href="?pagina=' .$i.'">'.$i.'</a></li>';
+                                    echo '  <li><a href="?pagina='.$i.'&'.$buscar.'">'.$i.'</a></li>';
                                         }
                                     }    
                                    
@@ -214,21 +253,19 @@ if($result_can > 0){
                                         echo '  <li class="pageSelected">'.$j.'</li>';
                                     }else{
 
-                                echo '  <li><a href="?pagina=' .$j.'">'.$j.'</a></li>';
+                                echo '  <li><a href="?pagina='.$j.'&'.$buscar.'">'.$j.'</a></li>';
                                     }
                                 }
                                    
                                 
                             }
                         }
-
                     }
 
                                 if($pagina != $total_paginas && $resultados != "no hay resultados") { ?>
-                                    <li><a href="?pagina=<?php echo ($pagina >= $total_paginas ) ? $total_paginas : $pagina+1?>"><i class="fa-solid fa-caret-right"></i></a></li>
-                                    <li><a href="?pagina=<?php echo $total_paginas?>"><i class="fa-solid fa-forward-step"></i></a></li>
-                                    <?php }
-                                    } ?>
+                                    <li><a href="?pagina=<?php echo ($pagina >= $total_paginas ) ? $total_paginas : $pagina+1?>&<?php echo $buscar?>"><i class="fa-solid fa-caret-right"></i></a></li>
+                                    <li><a href="?pagina=<?php echo $total_paginas?>&<?php echo $buscar?>"><i class="fa-solid fa-forward-step"></i></a></li>
+                                    <?php } } ?>
                                 </ul>
         </div>
 

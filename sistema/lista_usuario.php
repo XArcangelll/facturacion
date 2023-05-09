@@ -49,7 +49,7 @@ include "../conexion.php";
             <?php
 
                 //paginador
-                $sql_registe = mysqli_query($connection,"select count(*) as total_registro from usuario where estatus = 1");
+                $sql_registe = mysqli_query($connection,"select count(*) as total_registro from usuario where estatus = 1 and rol != 1");
                 $result_register = mysqli_fetch_array($sql_registe);
 
                 $total_registro = $result_register['total_registro'];
@@ -75,7 +75,7 @@ include "../conexion.php";
                     header("location: lista_usuario.php?pagina=$total_paginas");
                 }
             
-                $query = mysqli_query($connection,"select u.idusuario,u.nombre,u.correo,u.usuario,u.rol as idrol,r.rol from usuario u inner join rol r on r.idrol = u.rol where u.estatus = 1 order by u.idusuario asc LIMIT $desde,$por_pagina");
+                $query = mysqli_query($connection,"select u.idusuario,u.nombre,u.correo,u.usuario,u.rol as idrol,r.rol from usuario u inner join rol r on r.idrol = u.rol where u.estatus = 1 and u.rol != 1  order by u.idusuario asc LIMIT $desde,$por_pagina");
                 mysqli_close($connection);	
                 $result_can = mysqli_num_rows($query);
 

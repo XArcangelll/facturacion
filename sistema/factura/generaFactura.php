@@ -29,7 +29,7 @@
 		}
 
 
-		$query = mysqli_query($connection,"SELECT f.nofactura, DATE_FORMAT(f.fecha, '%d/%m/%Y') as fecha, DATE_FORMAT(f.fecha,'%H:%i:%s') as  hora, f.codcliente, f.estatus,
+		$query = mysqli_query($connection,"SELECT f.totalfactura, f.nofactura, DATE_FORMAT(f.fecha, '%d/%m/%Y') as fecha, DATE_FORMAT(f.fecha,'%H:%i:%s') as  hora, f.codcliente, f.estatus,
 												 v.nombre as vendedor,
 												 cl.dni, cl.nombre, cl.telefono,cl.direccion
 											FROM factura f

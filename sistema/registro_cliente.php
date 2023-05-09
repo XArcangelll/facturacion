@@ -26,7 +26,7 @@ include "../conexion.php";
 				$direccion = $_POST["direccion"];
                 $idusuario = $_SESSION["idUser"];
 
-				$query = mysqli_query($connection,"select * from cliente where dni = '$dni' ");
+				$query = mysqli_query($connection,"select * from cliente where dni = '$dni' and estatus = 1");
 				
 				$result = mysqli_fetch_array($query);
 

@@ -13,7 +13,7 @@ if(!isset($_SESSION["active"])){
 <header>
 		<div class="header">
 			
-			<h1>Sistema Facturación</h1>
+			<h1>Sistema Tienda</h1>
 			<div class="optionsBar">
 				<p><?php 
 						echo fechaC();

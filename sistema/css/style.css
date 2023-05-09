@@ -54,7 +54,7 @@ header{
 }
 .header{
 	color: #FFF;
-	background: #0a4661;
+	background: #0F3152;
 	height: 35px;
 	display: -webkit-flex;
 	display: -moz-flex;
@@ -99,7 +99,7 @@ header{
     margin-left: 30px;
 }
 nav ul{
-	background: #058167;
+	background: #191B21;
 	/*background: #05817d;*/
 	list-style: none;
 	display: -webkit-flex;
@@ -122,7 +122,7 @@ nav a{
 	text-transform: uppercase;
 	letter-spacing: 2px;
 	transition: background .5s;
-	border-right: 1px solid #319B8F;
+	border-right: 1px solid #191B21;
 }
 nav .principal > a{
     background: url(../img/arrow_bottom.png) no-repeat;
@@ -137,7 +137,7 @@ nav ul li:hover ul{
 }
 nav li ul{
 	/*background: #177470;*/
-	background: #2d9872;
+	background: #191B21;
 	display: none;
 	flex-direction: column;
 	position: absolute;
@@ -151,7 +151,7 @@ nav li ul a{
 }
 nav li ul a:hover{
 	/*background: #2c9595;*/
-	background: #147556;
+	background: #0F3152;
 }
 nav li ul li:last-child{
 	border-radius: 0 0 10px 10px;
@@ -1017,4 +1017,131 @@ a{
 	font-size: 35px;
 	margin-bottom: 20px;
 	margin-top: 0px;
+}
+
+.arreglar_search{
+	width: 600px !important;
+}
+
+/*PANEL DE CONTROL*/
+
+.titlePanelControl{
+	width: 100%;
+	background: #FFF;
+	padding: 5px 15px;
+	margin-bottom: 10px;
+	font-size: 18pt !important;
+	color: #0A4661;
+	margin-top: 10px;
+}
+
+.divContainer{
+	margin-bottom: 20px;
+}
+
+.dashboard{
+	display: flex;
+	justify-content: space-around;
+	width: 100%;
+	margin: auto;
+}
+
+.dashboard a{
+	color: #898989;
+	width: calc(100%/7);
+	background-color: #fff;
+	font-size: 25pt;
+	text-align: center;
+
+}
+
+.dashboard p{
+	color: #3279a7;
+}
+
+.dashboard a span{
+	font-weight: bold;
+	font-size: 14pt;
+}
+
+.containerPerfil{
+	display: flex;
+	justify-content: space-around;
+	align-items: flex-start;
+	flex-wrap: wrap;
+}
+
+.containerDataUser, .containerDataEmpresa{
+	width: 500px;
+	background-color: #fff;
+	padding: 20px;
+}
+
+.btnChangePass{
+	width: 100% !important;
+}
+
+.logoUser, .logoEmpresa{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 200px;
+	height: 200px;
+	border-radius: 50%;
+	margin: 20px auto;
+	padding: 25px;
+	background: #E9E9E9;
+}
+
+.logoUser img, .logoEmpresa img{
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+}
+
+.divDataUser{
+	padding: 10px;
+	margin: auto;
+}
+
+.divInfoSistema h4{
+	background: #3279a7;
+	padding: 5px 10px;
+	color: #FFF;
+	border-radius: 5px;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+
+.divDataUser > div{
+	display: flex;
+}
+.divDataUser label{
+	width: 150px;
+	margin: 0;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.divDataUser span{
+	padding: 5px;
+	display: flex;
+	align-items: center;
+}
+
+.divInfoSistema form{
+	padding: 20px;
+}
+.divInfoSistema input{
+	margin-bottom: 10px;
+}
+
+.divInfoSistema button{
+	width: 100%;
+}
+
+.alertChangePass{
+	font-weight: bold;
+	text-align: center;
 }

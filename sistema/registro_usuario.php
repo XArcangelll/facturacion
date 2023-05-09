@@ -34,7 +34,7 @@ include "../conexion.php";
 				$clave = md5($_POST["clave"]);
 				$rol = $_POST["rol"];
 
-				$query = mysqli_query($connection,"select * from usuario where usuario = '$user' or correo = '$email' ");
+				$query = mysqli_query($connection,"select * from usuario where (usuario = '$user' or correo = '$email') and estatus = 1");
 				
 				$result = mysqli_fetch_array($query);
 

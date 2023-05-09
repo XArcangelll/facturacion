@@ -26,7 +26,7 @@ include "../conexion.php";
 				$clave = md5($_POST["clave"]);
 				$rol = $_POST["rol"];
 
-				$query = mysqli_query($connection,"select * from usuario where (usuario = '$user' and idusuario != $idusuario) or (correo = '$email' and idusuario != $idusuario ) ");
+				$query = mysqli_query($connection,"select * from usuario where ((usuario = '$user' and idusuario != $idusuario) or (correo = '$email' and idusuario != $idusuario )) and estatus = 1");
 				$result = mysqli_fetch_array($query);
 
 				if($result > 0){
@@ -98,6 +98,9 @@ include "../conexion.php";
     }
 
 	$iduser =  $_GET["id"];
+	if($iduser == 13){
+		header("location: lista_usuario.php");
+	}
 
 	$sql = mysqli_query($connection,"select u.idusuario,u.nombre,u.correo,u.usuario, (u.rol) as idrol, (r.rol) as rol from usuario u inner join rol r on r.idrol = u.rol where idusuario = $iduser and estatus = 1");
 	mysqli_close($connection);	

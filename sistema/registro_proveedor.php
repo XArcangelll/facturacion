@@ -30,7 +30,7 @@ include "../conexion.php";
 				$direccion = $_POST["direccion"];
                 $idusuario = $_SESSION["idUser"];
 
-				$query = mysqli_query($connection,"select * from proveedor where proveedor = '$proveedor' ");
+				$query = mysqli_query($connection,"select * from proveedor where proveedor = '$proveedor' and estatus = 1");
 				
 				$result = mysqli_fetch_array($query);
 

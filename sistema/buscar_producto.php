@@ -222,6 +222,9 @@ include "../conexion.php";
 
                                 <?php 
                                         }
+
+                                if($total_paginas > 1){
+
                                 for($i = 1; $i<= $total_paginas;$i++){
 
                                         if($i == $pagina){
@@ -233,6 +236,7 @@ include "../conexion.php";
                                     echo '<li><a href="?pagina='.$i.'&'.$opcion.'='.(($opcion=="proveedor") ? $search_proveedor : $busqueda).'">'.$i.'</a></li>';
                                         }
                                 }
+                            }
 
                                 if($pagina != $total_paginas && $resultados != "no hay resultados") { ?>
                                     <li><a href="?pagina=<?php echo ($pagina >= $total_paginas ) ? $total_paginas : $pagina+1?>&<?php echo $opcion ?>=<?php echo ($opcion == "proveedor") ? $search_proveedor : $busqueda?>"><i class="fa-solid fa-caret-right"></i></a></li>

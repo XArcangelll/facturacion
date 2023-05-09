@@ -242,7 +242,7 @@ p, label, span, table{
 				</tr>
 				<tr>
 					<td colspan="3" class="textright"><span>TOTAL S/.</span></td>
-					<td class="textright"><span><?php echo $total; ?></span></td>
+					<td class="textright"><span><?php echo $factura['totalfactura']; ?></span></td>
 				</tr>
 		</tfoot>
 	</table>
