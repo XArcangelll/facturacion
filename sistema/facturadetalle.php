@@ -43,7 +43,7 @@
 				$anulada = '<img class="anulada" src="http://localhost/facturacion/sistema/factura/img/anulado.png" alt="Anulada">';
 			}
 
-			$query_productos = mysqli_query($connection,"SELECT p.descripcion,dt.cantidad,dt.precio_venta,p.codmedida
+			$query_productos = mysqli_query($connection,"SELECT p.precio,p.descripcion,dt.cantidad,dt.precio_venta,p.codmedida
 														FROM factura f
 														INNER JOIN detallefactura dt
 														ON f.nofactura = dt.nofactura
@@ -84,7 +84,7 @@
 }
 p, label, span, table{
 	font-family: 'BrixSansRegular';
-	font-size: 15pt;
+	font-size: 18pt;
 }
 .h2{
 	font-family: 'BrixSansBlack';
@@ -173,7 +173,7 @@ p, label, span, table{
 	font-family: 'BrixSansBlack';
 }
 .nota{
-	font-size: 8pt;
+	font-size: 12pt;
 }
 .label_gracias{
 	font-family: verdana;
@@ -241,7 +241,7 @@ p, label, span, table{
 						</tr>
 						<tr>
 							<td><label>Nombre:</label> <p><?php echo $factura['nombre']; ?></p></td>
-							<td><label>Dirección:</label> <p><?php echo $factura['direccion']; ?></p></td>
+							<td><label>Dirección</label> <p><?php echo ":  ".$factura['direccion']; ?></p></td>
 						</tr>
 					</table>
 				</div>
@@ -269,7 +269,9 @@ p, label, span, table{
 			 ?>
 				<tr>
 					<td class="textcenter"><?php echo $row['cantidad']; ?></td>
-					<td><?php echo $row['descripcion']; ?></td>
+					<td><?php 
+					echo ($row["precio"] != $row["precio_venta"]) ? $row['descripcion'] . " (HELADO)" : $row['descripcion'];
+					 ?></td>
 					<td class="textright"><?php echo $row['precio_venta']; ?></td>
 
 					<?php

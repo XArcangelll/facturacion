@@ -207,7 +207,10 @@ p, label, span, table{
 			 ?>
 				<tr>
 					<td class="textcenter"><?php echo $row['cantidad']; ?></td>
-					<td><?php echo $row['descripcion']; ?></td>
+					<td><?php 
+						echo ($row["precio"] != $row["precio_venta"]) ? $row['descripcion'] . " (HELADO)" : $row['descripcion'];
+					
+					?></td>
 					<td class="textright"><?php echo $row['precio_venta']; ?></td>
 
 						<?php

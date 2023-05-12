@@ -49,7 +49,7 @@
 				$anulada = '<img class="anulada" src="http://localhost/facturacion/sistema/factura/img/anulado.png" alt="Anulada">';
 			}
 
-			$query_productos = mysqli_query($connection,"SELECT p.codmedida,p.descripcion,dt.cantidad,dt.precio_venta
+			$query_productos = mysqli_query($connection,"SELECT p.precio, p.codmedida,p.descripcion,dt.cantidad,dt.precio_venta
 														FROM factura f
 														INNER JOIN detallefactura dt
 														ON f.nofactura = dt.nofactura
