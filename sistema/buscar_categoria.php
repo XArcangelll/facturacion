@@ -2,12 +2,6 @@
 
 session_start();
 
-
-
-if($_SESSION["rol"]!= 1){
-	header("location: ./");
-}
-
 include "../conexion.php";
 
 
@@ -21,7 +15,7 @@ include "../conexion.php";
 	<meta charset="UTF-8">
 	
 	<?php include "includes/scripts.php" ?>
-	<title>Lista de Usuarios</title>
+	<title>Lista de Categorias</title>
 </head>
 <body>
 	
@@ -34,35 +28,31 @@ include "../conexion.php";
         $busqueda = strtolower($_REQUEST["busqueda"]);
 
         if(empty($busqueda)){
-            header("location: lista_usuario.php");
+            header("location: lista_categoria.php");
             mysqli_close($connection);
         }
 
     ?>
 		
-        <h1><i class="fa-solid fa-users"></i> Lista de Usuarios</h1>
-        <a href="registro_usuario.php" class="btn_new"><i class="fa-solid fa-user-plus"></i> Crear Usuario</a>
-        
-        <form action="buscar_usuario.php" method="get" class="form_search">
-            <input type="text" name="busqueda" id="busqueda" placeholder="Buscar" value="<?php echo $busqueda;?>">
+        <h1><i class="fa-solid fa-store"></i> Lista de Categorias</h1>
+        <a href="registro_categoria.php" class="btn_new"><i class="fa-solid fa-plus"></i> Crear Categoria</a>
 
+        <form action="buscar_categoria.php" method="get" class="form_search">
+        <input type="text" name="busqueda" id="busqueda" placeholder="Buscar">
             <button type="submit" class="btn_search"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
         </form>
 
         <table>
             <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Correo</th>
-                <th>Usuario</th>
-                <th>Rol</th>
+            <th>Código</th>
+                <th>Nombre de la Categoría</th>
                 <th>Acciones</th>
             </tr>
 
             <?php
 
                 //paginador
-                $sql_registe = mysqli_query($connection,"select count(*) as total_registro from usuario inner join rol on usuario.rol = rol.idrol where ( idusuario like '%$busqueda%' or nombre like '%$busqueda%' or correo like '%$busqueda%' or usuario like '%$busqueda%' or rol.rol like '%$busqueda%' ) and estatus = 1 and usuario.rol != 1;");
+                $sql_registe = mysqli_query($connection,"select count(*) as total_registro from categoria where ( idcategoria like '%$busqueda%' or nombrecat like '%$busqueda%') and estatus = 1;");
                 $result_register = mysqli_fetch_array($sql_registe);
 
                 $total_registro = $result_register['total_registro'];
@@ -83,10 +73,10 @@ include "../conexion.php";
                 
 
                 if($pagina <= 0){
-                    header("location: lista_usuario.php");
+                    header("location: lista_categoria.php");
                 }
             
-                $query = mysqli_query($connection,"select u.idusuario,u.nombre,u.correo,u.usuario,u.rol as idrol,r.rol from usuario u inner join rol r on r.idrol = u.rol where ( u.idusuario like '%$busqueda%' or u.nombre like '%$busqueda%' or u.correo like '%$busqueda%' or u.usuario like '%$busqueda%' or r.rol like '%$busqueda%' ) and u.estatus = 1 and u.rol != 1 order by u.idusuario asc LIMIT $desde,$por_pagina");
+                $query = mysqli_query($connection,"select idcategoria,nombrecat from categoria  where ( idcategoria like '%$busqueda%' or nombrecat like '%$busqueda%') and estatus = 1 order by idcategoria asc LIMIT $desde,$por_pagina");
                 mysqli_close($connection);
                 $result_can = mysqli_num_rows($query);
 
@@ -94,11 +84,11 @@ include "../conexion.php";
                                 $resultados = "";
 
                                 if($pagina <= 0){
-                                    header("location: buscar_usuario.php?busqueda=$busqueda");
+                                    header("location: buscar_categoria.php?busqueda=$busqueda");
                                 }
                 
                                 if($pagina > $total_paginas){
-                                    header("location: buscar_usuario.php?pagina=$total_paginas&busqueda=$busqueda");
+                                    header("location: buscar_categoria.php?pagina=$total_paginas&busqueda=$busqueda");
                                 }
                 
 
@@ -107,20 +97,16 @@ include "../conexion.php";
             ?>
 
             <tr>
-                <td><?php echo $result["idusuario"]?></td>
-                <td><?php echo $result["nombre"]?></td>
-                <td><?php echo $result["correo"]?></td>
-                <td><?php echo $result["usuario"]?></td>
-                <td><?php echo $result["rol"]?></td>
+                <td><?php echo $result["idcategoria"]?></td>
+                <td><?php echo $result["nombrecat"]?></td>
                 <td>
-                    <a class="link_edit" href="editar_usuario.php?id=<?php echo $result["idusuario"]?>"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
+                    <a class="link_edit" href="editar_categoria.php?id=<?php echo $result["idcategoria"]?>"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
                     
 
                     <?php
-                        if($result["idrol"] != 1){
+                       if($_SESSION["rol"] == 1){ 
                     ?>
-                    |
-                    <a class="link_delete" href="eliminar_confirmar_usuario.php?id=<?php echo $result["idusuario"]?>"><i class="fa-solid fa-trash"></i> Eliminar</a>
+                    <a class="link_delete" href="eliminar_confirmar_categoria.php?id=<?php echo $result["idcategoria"]?>"><i class="fa-solid fa-trash"></i> Eliminar</a>
                
                             <?php
                         }
@@ -132,7 +118,7 @@ include "../conexion.php";
                             }else{
 
                                 if($pagina <= 0){
-                                    header("location: lista_usuario.php");
+                                    header("location: lista_categoria.php");
                                 }
                 
                                 $resultados = "no hay resultados";
@@ -163,6 +149,9 @@ include "../conexion.php";
 
                                 <?php 
                                         }
+
+                                if($total_paginas > 1){
+
                                 for($i = 1; $i<= $total_paginas;$i++){
 
                                         if($i == $pagina){
@@ -172,6 +161,7 @@ include "../conexion.php";
                                     echo '  <li><a href="?pagina='.$i.'&busqueda='.$busqueda.'">'.$i.'</a></li>';
                                         }
                                 }
+                            }
 
                                 if($pagina != $total_paginas) { ?>
                                     <li><a href="?pagina=<?php echo ($pagina >= $total_paginas ) ? $total_paginas : $pagina+1?>&busqueda=<?php echo $busqueda?>"><i class="fa-solid fa-caret-right"></i></a></li>

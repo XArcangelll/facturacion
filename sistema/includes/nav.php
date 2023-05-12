@@ -40,6 +40,13 @@
 						<li><a href="lista_producto.php"><i class="fa-solid fa-store"></i> Lista de Productos</a></li>
 					</ul>
 				</li>
+				<li class="principal">
+					<a href="#"><i class="fa-solid fa-store"></i> Categorias</a>
+					<ul>
+						<li><a href="registro_categoria.php"><i class="fa-solid fa-store"></i> Nueva Categoria</a></li>
+						<li><a href="lista_categoria.php"><i class="fa-solid fa-store"></i> Lista de Categorias</a></li>
+					</ul>
+				</li>
 				<?php } ?>
 				<li class="principal">
 					<a href="#"><i class="fa-solid fa-money-bill"></i> Ventas</a>

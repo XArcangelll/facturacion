@@ -88,9 +88,15 @@ include "../conexion.php";
             </div>
         </div>
     </div>
-<div class="datos_venta">
+<div class="datos_boton_check">
 <button  id="modalProducto">Buscar Producto</button>
+
+<div class="ocultar">
+ <!-- va el input check -->
+    </div>
 </div>
+
+
  
 
     <table class="tbl_venta">
@@ -101,11 +107,12 @@ include "../conexion.php";
                     <th>Existencia</th>
                     <th width="100px">Cantidad</th>
                     <th class="textright">Precio</th>
+                
                     <th class="textright">Precio Total</th>
                     <th> Acción</th>
                 </tr>
                 <tr>
-                    <td><input type="text" name="txt_cod_producto" id="txt_cod_producto"></td>
+                    <td><input type="number" name="txt_cod_producto" id="txt_cod_producto"></td>
                     <td id="txt_descripcion">-</td>
                     <td id="txt_existencia">-</td>
                     <td><input type="text" name="txt_cant_producto" id="txt_cant_producto" value="0" min="1" disabled></td>
@@ -138,8 +145,10 @@ include "../conexion.php";
 <script>
     $(document).ready(function(e){
             var usuarioid = '<?php echo $_SESSION["idUser"] ?>';
-            searchForDetalle(usuarioid);
-    });
+            searchForDetalle(usuarioid);    
+        
+
+        });
 </script>
     
 </body>

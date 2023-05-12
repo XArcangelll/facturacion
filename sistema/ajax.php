@@ -9,6 +9,7 @@ include  "../conexion.php";
 
 
 
+
 //exit;
 
 
@@ -57,7 +58,7 @@ if(!empty($_POST)){
     {
         $producto_id = $_POST["producto"];
 
-        $query = mysqli_query($connection,"Select codmedida,codproducto,descripcion, existencia, precio from producto where codproducto = $producto_id and estatus = 1");
+        $query = mysqli_query($connection,"Select  adicion,codmedida,codproducto,descripcion, existencia, precio from producto where codproducto = $producto_id and estatus = 1");
 
             mysqli_close($connection);
             $result = mysqli_num_rows($query);
@@ -189,12 +190,16 @@ if($_POST["action"] == "addProductoDetalle"){
         $codproducto = $_POST["producto"];
         $cantidad = $_POST["cantidad"];
         $token = md5($_SESSION["idUser"]);
+        $check = $_POST["infocheck"];
 
         $query_iva = mysqli_query($connection,"SELECT iva from configuracion");
         $result_iva = mysqli_num_rows($query_iva);
 
-        $query_detalle_temp = mysqli_query($connection,"CALL add_detalle_temp($codproducto,$cantidad,'$token')");
+
+        $query_detalle_temp = mysqli_query($connection,"CALL add_detalle_temp($codproducto,$cantidad,'$token','$check' )");
         $result = mysqli_num_rows($query_detalle_temp);
+
+       
 
         $detalletabla = "";
         $sub_total = 0;
@@ -209,6 +214,12 @@ if($_POST["action"] == "addProductoDetalle"){
             }
 
             while($data = mysqli_fetch_assoc($query_detalle_temp)){
+                $data_de_adicion = "";
+                if(  $data["precio"] != $data["precio_venta"]){
+                        $data_de_adicion = " (HELADO)";
+                }else{
+                    $data_de_adicion = "";
+                }
 
                 $codmedida = $data["codmedida"];
                 if($codmedida == 1){
@@ -222,7 +233,7 @@ if($_POST["action"] == "addProductoDetalle"){
 
                     $detalletabla .= ' <tr>
                     <td>' .$data["codproducto"].'</td>
-                    <td colspan="2">' .$data["descripcion"].'</td>
+                    <td colspan="2">' .$data["descripcion"]. $data_de_adicion.'</td>
                     <td class="textcenter">' .$data["cantidad"].'</td>
                     <td class="textright">' .$data["precio_venta"].'</td>
                     <td class="textright">' .$preciototal.'</td>
@@ -280,13 +291,12 @@ if($_POST["action"] == "searchForDetalle"){
      
         $token = md5($_SESSION["idUser"]);
 
-        $query = mysqli_query($connection,"SELECT p.codmedida,tmp.correlativo, tmp.token_user, tmp.cantidad, tmp.precio_venta, p.codproducto, p.descripcion from detalle_temp tmp inner join producto p on tmp.codproducto = p.codproducto where token_user = '$token' ");
+        $query = mysqli_query($connection,"SELECT p.codmedida,tmp.correlativo, tmp.token_user, tmp.cantidad, tmp.precio_venta, p.codproducto, p.descripcion,p.precio from detalle_temp tmp inner join producto p on tmp.codproducto = p.codproducto where token_user = '$token' ");
         $result = mysqli_num_rows($query);
         $query_iva = mysqli_query($connection,"SELECT iva from configuracion");
         $result_iva = mysqli_num_rows($query_iva);
 
-        
-    
+
 
         $detalletabla = "";
         $sub_total = 0;
@@ -301,6 +311,12 @@ if($_POST["action"] == "searchForDetalle"){
             }
 
             while($data = mysqli_fetch_assoc($query)){
+                $resultado_info = "";
+                if($data["precio"] != $data["precio_venta"]){
+                        $resultado_info = " (HELADO)";
+                }else{
+                    $resultado = "";
+                }
                 $codmedida = $data["codmedida"];
                 if($codmedida == 1){
                     $preciototal = round($data["cantidad"] * $data["precio_venta"],2);
@@ -313,7 +329,7 @@ if($_POST["action"] == "searchForDetalle"){
 
                     $detalletabla .= ' <tr>
                     <td>' .$data["codproducto"].'</td>
-                    <td colspan="2">' .$data["descripcion"].'</td>
+                    <td colspan="2">' .$data["descripcion"].$resultado_info.'</td>
                     <td class="textcenter">' .$data["cantidad"].'</td>
                     <td class="textright">' .$data["precio_venta"].'</td>
                     <td class="textright">' .$preciototal.'</td>
@@ -391,6 +407,14 @@ if($_POST["action"] == "delProductoDetalle"){
             }
 
             while($data = mysqli_fetch_assoc($query_detalle_temp)){
+
+                $resultado = "";
+                if($data["precio_venta"] != $data["precio"]){
+                    $resultado = " (HELADO)";
+                }else{
+                    $resultado = "";
+                }
+
                 $codmedida = $data["codmedida"];
                 if($codmedida == 1){
                     $preciototal = round($data["cantidad"] * $data["precio_venta"],2);
@@ -403,7 +427,7 @@ if($_POST["action"] == "delProductoDetalle"){
 
                     $detalletabla .= ' <tr>
                     <td>' .$data["codproducto"].'</td>
-                    <td colspan="2">' .$data["descripcion"].'</td>
+                    <td colspan="2">' .$data["descripcion"].$resultado.'</td>
                     <td class="textcenter">' .$data["cantidad"].'</td>
                     <td class="textright">' .$data["precio_venta"].'</td>
                     <td class="textright">' .$preciototal.'</td>

@@ -64,7 +64,31 @@ function boton_agregar(){
                        
                         if(response != "error"){
                             var info = JSON.parse(response);
+                         
+                            if(parseFloat(info.adicion) > 0){
+                                $(".ocultar").html('<p class="textito">HELADA</p>'+
+                                '<input id="check" type="checkbox" name="adicion" value="adicion">');
     
+                                let chekito =   document.getElementById("check");
+    
+                               chekito.addEventListener("change",function(e){
+                                   
+                                    if(chekito.checked){
+                                        $("#txt_precio").html((parseFloat(info.precio)+parseFloat(info.adicion)).toFixed(2));
+                                        $("#txt_precio_total").html(parseFloat(($("#txt_cant_producto").val())*(parseFloat(info.precio)+parseFloat(info.adicion))).toFixed(2));
+                                    
+                                    }else{
+                                        $("#txt_precio").html(info.precio);
+                                        
+                                        $("#txt_precio_total").html(parseFloat(($("#txt_cant_producto").val())*(parseFloat(info.precio))).toFixed(2));
+                                    }
+    
+                                });
+                                
+    
+                            }else{
+                               $(".ocultar").html('');
+                            }
                            
                             $("#txt_descripcion").html(info.descripcion);
                             $("#txt_existencia").html(info.existencia);
@@ -91,7 +115,7 @@ function boton_agregar(){
                             $("#txt_cant_producto").val("0");
                             $("#txt_precio").html("0.00");
                             $("#txt_precio_total").html("0.00");
-    
+                            $(".ocultar").html('');
                              //bloquear cantidad
                              $("#txt_cant_producto").attr("disabled","disabled");
     

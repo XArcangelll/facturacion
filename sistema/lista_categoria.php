@@ -24,7 +24,7 @@ include "../conexion.php";
 	<meta charset="UTF-8">
 	
 	<?php include "includes/scripts.php" ?>
-	<title>Lista de Productos</title>
+	<title>Lista de Categorias</title>
 </head>
 <body>
 	
@@ -32,10 +32,10 @@ include "../conexion.php";
 
 	<section id="container">
 		
-        <h1><i class="fa-solid fa-store"></i> Lista de Productos</h1>
-        <a href="registro_producto.php" class="btn_new"><i class="fa-solid fa-plus"></i> Crear Producto</a>
+        <h1><i class="fa-solid fa-store"></i> Lista de Categorias</h1>
+        <a href="registro_categoria.php" class="btn_new"><i class="fa-solid fa-plus"></i> Crear Categoria</a>
 
-        <form action="buscar_producto.php" method="get" class="form_search">
+        <form action="buscar_categoria.php" method="get" class="form_search">
         <input type="text" name="busqueda" id="busqueda" placeholder="Buscar">
             <button type="submit" class="btn_search"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
         </form>
@@ -43,35 +43,7 @@ include "../conexion.php";
         <table>
             <tr>
                 <th>Código</th>
-                <th>Descripción</th>
-                <th>Precio</th>
-                <th>Existencia</th>
-                <th>
-                <?php
-							
-                            $query_proveedor = mysqli_query($connection,"Select codproveedor,proveedor from proveedor where estatus = 1 order by proveedor asc");
-
-                                $result_proveedor = mysqli_num_rows($query_proveedor);
-                              
-                        ?>
-
-                    <select name="proveedor" id="search_proveedor">
-                    <option value="" selected>Proveedor</option>
-                    <?php   
-                    
-                        if($result_proveedor > 0){
-                            while($proveedor = mysqli_fetch_array($query_proveedor)){
-                                ?>
-                                        <option value="<?php echo $proveedor["codproveedor"]?>"><?php echo $proveedor["proveedor"]?></option>
-                                <?php
-                            }
-                        }
-                        
-
-                    ?>
-                    </select>
-                </th>
-                <th>Foto</th>
+                <th>Nombre de la Categoría</th>
                 <th>Acciones</th>
             </tr>
 
@@ -80,14 +52,14 @@ include "../conexion.php";
             $resultados = "";
 
                 //paginador
-                $sql_registe = mysqli_query($connection,"select count(*) as total_registro from producto where estatus = 1");
+                $sql_registe = mysqli_query($connection,"select count(*) as total_registro from categoria where estatus = 1");
                 $result_register = mysqli_fetch_array($sql_registe);
 
                 $total_registro = $result_register['total_registro'];
 
                 $por_pagina = 5;
 
-                if(empty($_GET["pagina"])  || !is_numeric($_GET["pagina"])){
+                if(empty($_GET["pagina"]) || !is_numeric($_GET["pagina"]) ){
                     
                     $pagina = 1;
                 }else{
@@ -112,7 +84,7 @@ include "../conexion.php";
                 }*/
             
             
-                $query = mysqli_query($connection,"select p.codproducto,p.descripcion,p.precio,p.existencia,pr.proveedor,p.foto from producto p inner join proveedor pr on p.proveedor = pr.codproveedor where p.estatus = 1 order by codproducto desc LIMIT $desde,$por_pagina");
+                $query = mysqli_query($connection,"select idcategoria,nombrecat from categoria where estatus = 1 order by idcategoria desc LIMIT $desde,$por_pagina");
                 mysqli_close($connection);	
                 $result_can = mysqli_num_rows($query);
 
@@ -121,16 +93,9 @@ include "../conexion.php";
 						
             ?>
 
-            <tr class="row<?php echo $result["codproducto"]?>">
-                <td><?php echo $result["codproducto"]?></td>
-                <td><?php echo $result["descripcion"]?></td>
-                <td class="celPrecio"><?php echo $result["precio"]?></td>
-                <td class="celExistencia"><?php echo $result["existencia"]?></td>
-                <td><?php echo $result["proveedor"]?></td>
-    
-                <td><img class="img_producto" src="<?php echo "img/uploads/".$result["foto"]?>" alt="<?php echo $result["foto"]?>"></td>
-       
-               
+            <tr class="row<?php echo $result["idcategoria"]?>">
+                <td><?php echo $result["idcategoria"]?></td>
+                <td><?php echo $result["nombrecat"]?></td>
                 <td>
                 <?php
                     
@@ -138,12 +103,11 @@ include "../conexion.php";
                     
 
                     ?>
-                <a class="link_add add_product" product="<?php echo $result["codproducto"]?>"  href="#"><i class="fa-solid fa-plus"></i> Agregar</a>
                                 
-                    <a class="link_edit" href="editar_producto.php?id=<?php echo $result["codproducto"]?>"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
+                    <a class="link_edit" href="editar_categoria.php?id=<?php echo $result["idcategoria"]?>"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
 
                     
-                    <a class="link_delete del_product" product="<?php echo $result["codproducto"]?>" href="#"><i class="fa-solid fa-trash"></i> Eliminar</a>
+                    <a class="link_delete" href="eliminar_confirmar_categoria.php?id=<?php echo $result["idcategoria"]?>"><i class="fa-solid fa-trash"></i> Eliminar</a>
                
                <?php } ?>
                

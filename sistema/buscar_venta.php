@@ -104,7 +104,7 @@ if(!empty($_REQUEST["fecha_de"]) && !empty($_REQUEST["fecha_a"])){
 
                 $por_pagina = 10;
 
-                if(empty($_GET["pagina"]) ){
+                if(empty($_GET["pagina"]) || !is_numeric($_GET["pagina"]) ){
                     
                     $pagina = 1;
                 }else{

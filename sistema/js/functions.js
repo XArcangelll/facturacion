@@ -299,7 +299,32 @@ $(document).ready(function(){
                     if(response != "error"){
                         var info = JSON.parse(response);
 
-                       
+                        
+                        if(parseFloat(info.adicion) > 0){
+                            $(".ocultar").html('<p class="textito">HELADA</p>'+
+                            '<input id="check" type="checkbox" name="adicion" value="adicion">');
+
+                            let chekito =   document.getElementById("check");
+
+                           chekito.addEventListener("change",function(e){
+                               
+                                if(chekito.checked){
+                                    $("#txt_precio").html((parseFloat(info.precio)+parseFloat(info.adicion)).toFixed(2));
+                                    $("#txt_precio_total").html(parseFloat(($("#txt_cant_producto").val())*(parseFloat(info.precio)+parseFloat(info.adicion))).toFixed(2));
+                                
+                                }else{
+                                    $("#txt_precio").html(info.precio);
+                                    
+                                    $("#txt_precio_total").html(parseFloat(($("#txt_cant_producto").val())*(parseFloat(info.precio))).toFixed(2));
+                                }
+
+                            });
+                            
+
+                        }else{
+                           $(".ocultar").html('');
+                        }
+
                         $("#txt_descripcion").html(info.descripcion);
                         $("#txt_existencia").html(info.existencia);
                         $("#txt_cant_producto").val("1");
@@ -325,7 +350,7 @@ $(document).ready(function(){
                         $("#txt_cant_producto").val("0");
                         $("#txt_precio").html("0.00");
                         $("#txt_precio_total").html("0.00");
-
+                        $(".ocultar").html('');
                          //bloquear cantidad
                          $("#txt_cant_producto").attr("disabled","disabled");
 
@@ -385,12 +410,23 @@ $(document).ready(function(){
                 var codproducto = $("#txt_cod_producto").val();
                 var cantidad = $("#txt_cant_producto").val();
                 var action = "addProductoDetalle";
+                var infocheck = "noadicion";
+                let chekito =   document.getElementById("check"); 
+                if(chekito){
+                    if(chekito.checked){
+                            infocheck = chekito.value;
+                       }else{
+                            infocheck = "noadicion";
+                    }
+                }
+
+                console.log(infocheck);
 
                 $.ajax({
                     url: "ajax.php",
                     type: "post",
                     async: true,
-                    data: {action:action,producto:codproducto,cantidad:cantidad},
+                    data: {action:action,producto:codproducto,cantidad:cantidad,infocheck:infocheck},
                     success: function(response){
                           
                         if(response != "error"){
@@ -406,7 +442,7 @@ $(document).ready(function(){
                             $("#txt_cant_producto").attr("disabled","disabled");
                             $("#txt_precio").html("0.00");
                             $("#txt_precio_total").html("0.00");
-
+                            $(".ocultar").html('');
                             $("#add_product_venta").slideUp();
                             
 
@@ -835,6 +871,15 @@ function del_producto_detalle(correlativo){
         data: {action:action,id_detalle:id_detalle},
         success: function(response){
             document.getElementById("txt_cod_producto").value = "";
+            $("#txt_cod_producto").val("");
+            $("#txt_descripcion").html("-");
+            $("#txt_existencia").html("-");
+            $("#txt_cant_producto").val("0");
+            $("#txt_cant_producto").attr("disabled","disabled");
+            $("#txt_precio").html("0.00");
+            $("#txt_precio_total").html("0.00");
+            $("#add_product_venta").slideUp();
+            $(".ocultar").html('');
            if(response != "error"){
             var info = JSON.parse(response);
 
@@ -848,7 +893,6 @@ function del_producto_detalle(correlativo){
             $("#txt_cant_producto").attr("disabled","disabled");
             $("#txt_precio").html("0.00");
             $("#txt_precio_total").html("0.00");
-
             $("#add_product_venta").slideUp();
 
            }else{

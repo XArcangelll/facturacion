@@ -63,7 +63,7 @@ include "../conexion.php";
 
                 $por_pagina = 10;
 
-                if(empty($_GET["pagina"]) ){
+                if(empty($_GET["pagina"]) || !is_numeric($_GET["pagina"])){
                     
                     $pagina = 1;
                 }else{
@@ -74,13 +74,13 @@ include "../conexion.php";
                 $desde = ($pagina-1) * $por_pagina;
                 $total_paginas = ceil($total_registro / $por_pagina);
 
-                if($pagina <= 0){
+              /*  if($pagina <= 0){
                     header("location: ventas.php");
                 }
 
                 if($pagina > $total_paginas){
                     header("location: ventas.php?pagina=$total_paginas");
-                }
+                }*/
             
                 $query = mysqli_query($connection,"select f.nofactura,f.fecha,f.totalfactura,f.codcliente,f.estatus,u.nombre as vendedor, cl.nombre as cliente from factura f inner join usuario u on f.usuario = u.idusuario inner join cliente cl on f.codcliente = cl.idcliente where f.estatus !=10 order by f.fecha desc LIMIT $desde,$por_pagina");
                 mysqli_close($connection);	

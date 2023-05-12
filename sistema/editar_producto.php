@@ -16,7 +16,7 @@ include "../conexion.php";
 	if(!empty($_POST)){
 		$alert = "";
 		if(empty($_POST["proveedor"]) || empty($_POST["descripcion"]) || empty($_POST["precio"]) || empty($_POST["medida"])
-		 || empty($_POST["id"])  || empty($_POST["foto_actual"])  || empty($_POST["foto_remove"]))
+		 || empty($_POST["id"])  || empty($_POST["foto_actual"])  || empty($_POST["foto_remove"]) || empty($_POST["categoria"]))
 		{
 
 			$alert = "<p class='msg_error'> Los campos Proveedor,Descripción y Precio son Obligatorios </p>";
@@ -27,7 +27,14 @@ include "../conexion.php";
                 $proveedor = $_POST["proveedor"];
 				$descripcion = $_POST["descripcion"];
 				$precio = $_POST["precio"];
+				$adicion = $_POST["adicion"];
 				$medida = $_POST["medida"];
+				$idcategoria = $_POST["categoria"];
+
+				if(empty($adicion)){
+					$adicion = 0.00;
+				}
+
 
 				if($medida != 1 && $medida != 2){
 					$medida = 1;
@@ -55,7 +62,7 @@ include "../conexion.php";
 				}
 
 
-						$query_update = mysqli_query($connection,"Update producto set descripcion='$descripcion', proveedor = $proveedor, precio = $precio, codmedida = $medida, foto = '$imgProducto' where codproducto = $codproducto");
+						$query_update = mysqli_query($connection,"Update producto set descripcion='$descripcion', proveedor = $proveedor, precio = $precio, adicion = $adicion, idcategoria = $idcategoria, codmedida = $medida, foto = '$imgProducto' where codproducto = $codproducto");
 						if($query_update){
 
 							if(($nombre_foto != "" && ($_POST["foto_actual"] != "img_producto.png" )) || ($_POST["foto_actual"] != $_POST["foto_remove"])){
@@ -91,7 +98,7 @@ include "../conexion.php";
 			header("location: lista_producto.php");
 		}
 
-		$query_producto = mysqli_query($connection,"SELECT p.codproducto,p.descripcion,p.precio,m.codmedida,m.nombre,p.foto,pr.codproveedor,pr.proveedor from producto p inner join proveedor pr on p.proveedor = pr.codproveedor inner join medida m on p.codmedida = m.codmedida where p.codproducto = $idproducto and p.estatus = 1");
+		$query_producto = mysqli_query($connection,"SELECT c.idcategoria, c.nombrecat, p.adicion, p.codproducto,p.descripcion,p.precio,m.codmedida,m.nombre,p.foto,pr.codproveedor,pr.proveedor from producto p inner join proveedor pr on p.proveedor = pr.codproveedor inner join medida m on p.codmedida = m.codmedida inner join categoria c on c.idcategoria = p.idcategoria where p.codproducto = $idproducto and p.estatus = 1");
 		$result_producto = mysqli_num_rows($query_producto);
 
 		$foto = "";
@@ -111,9 +118,12 @@ include "../conexion.php";
 			$precio = $data_producto["precio"];
 			$codmedida = $data_producto["codmedida"];
 			$nommedida = $data_producto["nombre"];
+			$adicional = $data_producto["adicion"];
 			$fotito = $data_producto["foto"];
 			$id_proveedor = $data_producto["codproveedor"];
 			$proveedor = $data_producto["proveedor"];
+			$id_categoria = $data_producto["idcategoria"];
+			$nombrecategoria = $data_producto["nombrecat"];
 		}else{
 			header("location: lista_producto.php");
 		}
@@ -172,6 +182,30 @@ include "../conexion.php";
 
 							?>	
 						</select>
+
+						<label for="categoria">Categoria</label>
+							<?php
+								$query_categoria = mysqli_query($connection,"Select idcategoria,nombrecat from categoria where estatus = 1 order by nombrecat asc");
+									$result_categoria = mysqli_num_rows($query_categoria);
+								
+							?>
+
+						<select name="categoria" id="categoria">
+							
+						<?php
+
+							if($result_categoria > 0){
+								while($cat = mysqli_fetch_array($query_categoria)){
+									
+							?>
+								<option <?php echo ($cat["idcategoria"] == $id_categoria) ? "selected" : "" ; ?> value="<?php echo $cat["idcategoria"] ?>"><?php echo $cat["nombrecat"] ?></option>
+							<?php
+									
+								}
+							}
+
+							?>	
+						</select>
 						
 						<label for="producto">Producto</label>
 						<input type="text" name="descripcion" value="<?php echo $descripcion?>" id="descripcion" placeholder="Descripción del Producto">
@@ -203,6 +237,9 @@ include "../conexion.php";
 
 						?>
 						</select>
+
+						<label for="adicion">Precio Adicional</label>
+						<input type="number" name="adicion" min="0.00" step="0.01" id="adicion" value="<?php echo $adicional?>" placeholder="Precio adicional del Producto">
 
 						<div class="photo">
 							<label for="foto">Foto</label>

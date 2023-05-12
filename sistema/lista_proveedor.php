@@ -58,7 +58,7 @@ include "../conexion.php";
 
                 $por_pagina = 5;
 
-                if(empty($_GET["pagina"]) ){
+                if(empty($_GET["pagina"]) || !is_numeric($_GET["pagina"])){
                     
                     $pagina = 1;
                 }else{
